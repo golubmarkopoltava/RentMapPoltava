@@ -3642,11 +3642,11 @@ function initMap(){
  if(typeof L==='undefined'){$('#map').innerHTML='<div class="note" style="margin:20px">Карта недоступна (немає бібліотеки). Каталог нижче працює.</div>';return}
  map=L.map('map',{scrollWheelZoom:true}).setView([49.5885,34.5514],12);
  // Локально відкритий файл не передає Referer: OSM і CARTO тоді віддають заглушки.
- // Esri та OSM France працюють без Referer і без ключа (перевірено) — перемикач шарів унизу праворуч.
+ // Esri та OSM France працюють без Referer і без ключа (перевірено) — перемикач шарів угорі праворуч.
  const esri=L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/{z}/{y}/{x}',{maxZoom:19,attribution:'Tiles © Esri — Esri, HERE, Garmin, © OpenStreetMap contributors'});
  const topo=L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Topo_Map/MapServer/tile/{z}/{y}/{x}',{maxZoom:19,attribution:'Tiles © Esri'});
  const osmfr=L.tileLayer('https://{s}.tile.openstreetmap.fr/osmfr/{z}/{x}/{y}.png',{subdomains:'abc',maxZoom:19,attribution:'© OpenStreetMap France | © OpenStreetMap contributors'});
- esri.addTo(map);let errs=0;esri.on('tileerror',()=>{if(++errs===6&&map.hasLayer(esri)){map.removeLayer(esri);osmfr.addTo(map)}});
+ topo.addTo(map);let errs=0;topo.on('tileerror',()=>{if(++errs===6&&map.hasLayer(topo)){map.removeLayer(topo);osmfr.addTo(map)}}); /* за замовчуванням — топографічна підкладка Esri */
  L.control.layers({'Вулиці (Esri)':esri,'Топографічна (Esri)':topo,'OpenStreetMap France':osmfr},null,{position:'topright'}).addTo(map);
  let lastSz=PIN_SZ(12);map.on('zoomend',()=>{const sz=PIN_SZ(map.getZoom());if(sz===lastSz)return;lastSz=sz;[layer,extraLayer].forEach(g=>g.eachLayer(m=>{if(m._pin){m.setIcon(pinIcon(m._pin.u,m._pin,map.getZoom()));if(m===ACTIVE&&m._icon)m._icon.classList.add('on')}}))});
  layer=L.layerGroup().addTo(map);extraLayer=L.layerGroup().addTo(map);
