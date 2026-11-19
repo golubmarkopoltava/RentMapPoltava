@@ -1,0 +1,832 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>RentMapPoltava — прозоре управління комунальним майном Полтави</title>
+<link rel="icon" type="image/png" href="/*__FAVICON__*/">
+<style>/*__LEAFLET_CSS__*/</style>
+<style>/*__STYLE__*/</style>
+</head>
+<body class="internal">
+<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false"><defs id="pinDefs"></defs></svg>
+<header>
+  <div class="top">
+    <div class="logo"><img class="gerb" src="/*__GERB__*/" alt="Герб міста Полтава" width="44" height="54"><div><h1>RentMapPoltava</h1><small>Прозоре управління комунальним майном Полтавської громади</small></div></div>
+    <div class="spacer"></div>
+    <div class="upd" id="upd"></div>
+    <div class="mode" role="group" aria-label="Режим"><button id="mPub" type="button" title="Карта, каталог, аналітика — для мешканців і бізнесу">Для мешканців</button><button id="mInt" type="button" class="on" title="Додатково: ознаки ризику, календар договорів, списки для аналізу">Для Управління</button></div>
+    <button class="cta" type="button" id="appTop"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 3H6v18h12V7z"/><path d="M14 3v4h4M9 13h6M9 17h4"/></svg>Подати заяву на оренду</button>
+  </div>
+</header>
+<div class="shell">
+<aside class="side" aria-label="Розділи">
+  <nav id="nav">
+    <div class="sg">Дані про майно</div>
+    <button data-t="map" class="on" type="button"><span class="si"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 4 3 6v14l6-2 6 2 6-2V4l-6 2-6-2z"/><path d="M9 4v14M15 6v14"/></svg></span><span class="sl">Карта і каталог</span></button>
+    <button data-t="an" type="button"><span class="si"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/></svg></span><span class="sl">Аналітика</span></button>
+    <button data-t="risk" type="button" class="internal-only"><span class="si"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 21V4M5 4h11l-2 4 2 4H5"/></svg></span><span class="sl">Ознаки ризику</span></button>
+    <button data-t="rec" type="button"><span class="si"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M10 14a4 4 0 0 0 5.7 0l3-3a4 4 0 0 0-5.7-5.7l-1 1"/><path d="M14 10a4 4 0 0 0-5.7 0l-3 3a4 4 0 0 0 5.7 5.7l1-1"/></svg></span><span class="sl">Звірка джерел</span></button>
+    <button data-t="meth" type="button"><span class="si"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5a2 2 0 0 1 2-2h13v16H6a2 2 0 0 0-2 2V5z"/><path d="M8 7h7"/></svg></span><span class="sl">Як це працює</span></button>
+    <div class="sg">Управління майном</div>
+    <button data-t="func" type="button"><span class="si"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="2"/><rect x="14" y="3" width="7" height="7" rx="2"/><rect x="3" y="14" width="7" height="7" rx="2"/><rect x="14" y="14" width="7" height="7" rx="2"/></svg></span><span class="sl">Функції управління</span></button>
+    <button data-t="pol" type="button"><span class="si"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 3H6v18h12V7z"/><path d="M14 3v4h4M9 12h6M9 16h6"/></svg></span><span class="sl">Положення</span></button>
+    <button data-t="cont" type="button"><span class="si"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2z"/></svg></span><span class="sl">Контакти</span></button>
+  </nav>
+  <a class="side-card" href="tel:+380532561996" title="Подзвонити до Управління майном"><b>Управління майном</b><span>+380 (532) 56-19-96</span><span>вул. Соборності, 36</span></a>
+</aside>
+<main>
+  <div class="hero">
+    <button class="act" type="button" id="actFind"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="#000" stroke-width="2.2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg></span><span><b>Знайти приміщення</b><span>Карта й каталог з фільтрами за площею, районом і статусом</span></span></button>
+    <button class="act" type="button" id="actApp"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="#000" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 3H6v18h12V7z"/><path d="M14 3v4h4M9 13h6M9 17h4"/></svg></span><span><b>Подати заяву на оренду</b><span>Покроково: від вибору об’єкта до готового тексту заяви</span></span></button>
+    <button class="act" type="button" id="actBot"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="#000" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a8 8 0 0 1-11.6 7.1L4 20l1-4.6A8 8 0 1 1 21 12z"/><path d="M8.5 11h.01M12 11h.01M15.5 11h.01"/></svg></span><span><b>Запитати помічника</b><span>Пишіть звичайною мовою — покажу записи з даних</span></span></button>
+  </div>
+  <div class="kpis" id="kpis"></div>
+
+  <!-- 3.1 -->
+  <section class="tab on" id="t-map">
+    <div class="mapwrap">
+      <div class="card filters">
+        <h3>Фільтри</h3>
+        <label for="fq">Адреса або ID</label><input id="fq" type="text" placeholder="Наприклад, Соборності">
+        <label>Статус</label>
+        <div class="chk"><input type="checkbox" id="fs-available" checked><span class="mpin" data-u="available"></span>Доступне: у переліку, договору немає в жодному джерелі</div>
+        <div class="chk"><input type="checkbox" id="fs-check" checked><span class="mpin" data-u="check"></span>Потребує уточнення (джерела розходяться)</div>
+        <div class="chk"><input type="checkbox" id="fs-leased" checked><span class="mpin" data-u="leased"></span>В оренді</div>
+        <div class="chk"><input type="checkbox" id="fs-inactive" checked><span class="mpin" data-u="inactive"></span>Неактивне</div>
+        <p class="hint" style="margin:4px 0 0">«Вільне» не визначаємо з одного джерела: статус Prozorro звіряється з переліком договорів міста.</p>
+        <label>Площа, м²</label><div class="row"><input id="fa1" type="number" placeholder="від" min="0"><input id="fa2" type="number" placeholder="до" min="0"></div>
+        <label for="fd">Район</label><select id="fd"><option value="">Усі</option></select>
+        <details><summary>Більше фільтрів</summary>
+        <label for="fy">Рік внесення до Prozorro</label><select id="fy"><option value="">Усі</option></select>
+        <label for="fl">Тип переліку</label><select id="fl"><option value="">Усі</option><option value="First">Перелік першого типу (аукціон)</option><option value="none">Не визначено</option></select>
+        <label for="fo">Балансоутримувач</label><select id="fo"><option value="">Усі</option></select>
+        </details>
+        <div class="chk internal-only" style="margin-top:10px"><input type="checkbox" id="fflag"><span>Лише з ознаками ризику</span></div>
+        <div class="chk"><input type="checkbox" id="fextra"><span>Показати об’єкти поза набором міста (з Prozorro)</span></div>
+        <div class="chk"><input type="checkbox" id="ffav"><span>★ Лише обране</span></div>
+        <div style="margin-top:12px" class="row"><button class="btn sm" id="freset" type="button">Скинути</button><button class="btn sm ghost" id="fcsv" type="button">Експорт CSV</button></div>
+        <p class="hint" id="geoinfo"></p>
+      </div>
+      <div>
+        <div id="map" role="region" aria-label="Карта об’єктів оренди"></div>
+        <div class="legend"><span><span class="mpin" data-u="available"></span> Доступне</span><span><span class="mpin" data-u="check"></span> Потребує уточнення</span><span><span class="mpin" data-u="leased"></span> В оренді</span><span><span class="mpin" data-u="inactive"></span> Неактивне</span><span><span class="mpin" data-u="extra"></span> Поза набором міста</span><span class="internal-only"><span class="mpin" data-u="leased" data-risk="1"></span> червоний знак «!» — є ознаки ризику</span><span class="hint">Розмір позначки залежить від масштабу карти</span></div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="row" style="justify-content:space-between;flex-wrap:wrap"><h3 id="catTitle">Каталог</h3><span class="hint">Клік по рядку — довідка про об’єкт. Сортування — клік по заголовку.</span></div>
+      <div class="tbl"><table id="cat"></table></div>
+    </div>
+  </section>
+
+  <!-- 3.2 -->
+  <section class="tab" id="t-an">
+    <div class="grid3" id="anTiles"></div>
+    <div class="grid2">
+      <div class="card"><h3>Об’єкти за статусом і районом</h3><div id="chDistrict"></div></div>
+      <div class="card"><h3>Рік внесення об’єкта до Prozorro.Продажі</h3><div id="chYear" class="bars"></div><p class="hint">Рік з ідентифікатора об’єкта (ocid). Це не дата рішення про включення до переліку.</p></div>
+    </div>
+    <div class="grid2">
+      <div class="card"><h3>Медіанна ставка аналогів, грн/м² на місяць без ПДВ</h3><div id="chRate" class="bars"></div><p class="hint">Ставки завершених аукціонів (помісячна оплата) + комерційні договори з переліку міста (ставка ÷ 1,2). Група — за площею об’єкта.</p></div>
+      <div class="card"><h3>Скільки часу минає до оренди</h3><div id="chTime"></div></div>
+    </div>
+    <div class="card"><h3>Орієнтовний калькулятор орендної плати</h3>
+      <div class="calc"><label class="hint">Площа, м²<input id="cA" type="number" min="1" value="60"></label><label class="hint">Порівнювати з<select id="cG"><option value="auto">аналогами тієї ж групи площі</option><option value="all">усіма об’єктами</option></select></label><div><div class="hint">Орієнтовно на місяць, без ПДВ</div><div class="big" id="cM">—</div></div><div><div class="hint">На рік, без ПДВ</div><div class="big" id="cY">—</div></div></div>
+      <p class="hint" id="cN" style="margin-top:8px"></p>
+      <p class="note" style="margin:8px 0 0">Це орієнтовний розрахунок за медіаною ставок завершених аукціонів і комерційних договорів, а не офіційна пропозиція, оцінка чи «ринкова» ставка. Офіційна стартова плата визначається за методикою (постанова КМУ №630) з урахуванням оціночної вартості, якої немає у відкритих даних.</p>
+    </div>
+    <div class="card" id="incCard">
+      <div class="row" style="justify-content:space-between;flex-wrap:wrap;gap:6px;align-items:baseline"><h3 style="margin:0">Скільки отримає громада: оренда чи приватизація</h3><span class="hint">Порівняння двох сценаріїв для одного об’єкта</span></div>
+      <div class="inc-top">
+        <div class="inc-obj"><label class="hint" for="iQ">Об’єкт — почніть вводити вулицю (або задайте площу вручну)</label>
+          <div class="combo" id="iCombo"><span class="combo-ic" aria-hidden="true"><svg viewBox="0 0 24 24" width="18" height="18"><circle cx="11" cy="11" r="6.5" fill="none" stroke="currentColor" stroke-width="2"/><path d="M16 16l4 4" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></span><input id="iQ" type="text" role="combobox" aria-expanded="false" aria-controls="iList" aria-autocomplete="list" autocomplete="off" spellcheck="false" placeholder="Наприклад: Європ…, Мазепи 36"><button type="button" class="combo-x" id="iQx" aria-label="Очистити" hidden>✕</button><div class="combo-list" id="iList" role="listbox" hidden></div></div>
+          <div class="hint" id="iInfo" style="margin-top:6px"></div></div>
+        <label class="hint">Площа, м²<input id="iA" type="number" min="1" step="0.1" value="60"></label>
+        <label class="hint">Район<select id="iLoc"><option value="Шевченківський">Шевченківський</option><option value="Київський">Київський</option><option value="Подільський">Подільський</option><option value="Полтавський">села громади</option></select></label>
+        <label class="hint hz"><span>Горизонт порівняння: <b id="iHv">10</b> р.</span><input id="iH" type="range" min="1" max="30" value="10" aria-label="Горизонт порівняння, років"></label>
+      </div>
+      <div class="inc-grid">
+        <div class="inc-col">
+          <div class="inc-h"><span class="ib rent" aria-hidden="true"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="8" cy="15" r="4"/><path d="m11 12 9-9M17 6l3 3M15 8l2 2"/></svg></span><div><b>Оренда</b><span>щомісячні надходження, майно лишається в громади</span></div></div>
+          <div class="inc-f">
+            <label class="hint w">Ставка, грн/м² на місяць без ПДВ<input id="iR" type="number" min="0" step="0.01"></label>
+            <div class="seg sm w" id="iRs" role="group" aria-label="Джерело ставки"><button type="button" data-s="analog" class="on">медіана аналогів</button><button type="button" data-s="contract" disabled>договір об’єкта</button></div>
+            <label class="hint">Місяців без орендаря на рік<input id="iV" type="number" min="0" max="12" step="1" value="0"></label>
+            <label class="hint">Частка до бюджету, %<input id="iB" type="number" min="0" max="100" step="1" value="100"></label>
+            <label class="hint w">Річна індексація плати, %<input id="iI" type="number" min="0" max="50" step="0.5" value="0"></label>
+          </div>
+          <div class="inc-out"><div><span>На місяць</span><b id="oRm">—</b></div><div><span>На рік</span><b id="oRy">—</b></div><div class="w hl"><span>За <i class="iHy">10</i> років</span><b id="oRh">—</b></div></div>
+        </div>
+        <div class="inc-col">
+          <div class="inc-h"><span class="ib priv" aria-hidden="true"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11 12 4l9 7"/><path d="M5 10v10h14V10"/><path d="M12 12v5M10 13.5h3a1.2 1.2 0 0 1 0 2.4h-2a1.2 1.2 0 0 0 0 2.4h3"/></svg></span><div><b>Приватизація</b><span>разовий продаж на аукціоні Prozorro</span></div></div>
+          <div class="inc-f">
+            <label class="hint w">Орієнтир ціни<select id="iPm"><option value="near">найближчі продажі Управління (місце й площа)</option><option value="q25">обережно — нижня чверть цін за м²</option><option value="q75">оптимістично — верхня чверть цін за м²</option><option value="own">своя ціна</option></select></label>
+            <label class="hint w">Ціна продажу, грн без ПДВ<input id="iP" type="number" min="0" step="1000"></label>
+            <label class="hint w">Податок на нерухомість і плата за землю від нового власника, грн/рік<input id="iT" type="number" min="0" step="100" value="0"></label>
+          </div>
+          <div class="inc-out"><div><span>Разово</span><b id="oPs">—</b></div><div><span>Ціна за м²</span><b id="oPm">—</b></div><div class="w hl"><span>За <i class="iHy">10</i> років разом з податками</span><b id="oPh">—</b></div></div>
+        </div>
+      </div>
+      <div class="inc-cmp"><div id="iVerdict" class="inc-v"></div><div id="iChart" class="inc-chart"></div><div class="hint" id="iHover" aria-live="polite"></div></div>
+      <details class="inc-an"><summary>На чому базується ціна: схожі продажі Управління на Prozorro</summary><div id="iAnInfo" class="hint" style="margin:6px 0 8px"></div><div class="tbl" style="max-height:340px"><table id="iAn"></table></div></details>
+      <p class="note" style="margin:10px 0 0">Орієнтовне порівняння, а не оцінка майна чи рекомендація продати. <b>Оренда:</b> ставка — медіана завершених аукціонів і комерційних договорів або чинний договір об’єкта (з договору прибираємо ПДВ ÷ 1,2). Частка до бюджету за замовчуванням 100 %: за звітом Управління за І півріччя 2026 оренда дала бюджету 9 858 767 грн, що близько до суми ставок переліку договорів без ПДВ за 6 місяців (≈ 9,74 млн грн). <b>Приватизація:</b> орієнтир — ціни договорів купівлі-продажу за завершеними аукціонами малої приватизації Управління на Prozorro.Продажі (без ПДВ). Стартову ціну встановлює аукціонна комісія — на рівні балансової вартості або, якщо її немає, за оцінкою (ст. 22 Закону №2269-VIII); остаточну ціну визначає аукціон. Чи продавати об’єкт, вирішує міська рада.</p>
+    </div>
+    <div class="card internal-only">
+      <div class="row" style="justify-content:space-between;flex-wrap:wrap;gap:8px"><h3>Календар договорів (перелік міста)</h3>
+        <div class="row" style="gap:8px"><div class="seg" id="calSeg"><button type="button" data-d="60" class="on">60 днів</button><button type="button" data-d="90">90 днів</button><button type="button" data-d="180">180 днів</button><button type="button" data-d="-1">Строк минув</button></div><button class="btn sm ghost" id="calCsv" type="button">Експорт CSV</button></div></div>
+      <p class="hint" id="calInfo"></p>
+      <div class="tbl"><table id="cal"></table></div>
+    </div>
+    <div class="card"><h3>Топ балансоутримувачів за площею в наборі</h3><div id="chOwner" class="bars"></div></div>
+    <div class="card">
+      <div class="row" style="justify-content:space-between;flex-wrap:wrap"><h3>Об’єкти «у переліку» Prozorro: чи справді вони вільні</h3><button class="btn sm ghost" id="vacCsv" type="button">Експорт для Excel</button></div>
+      <p class="hint">36 об’єктів мають у Prozorro статус «включено до переліку». Звірка з переліком договорів міста показує: для 31 з них є договір на ту саму адресу й площу, ще 4 — під питанням. Оцінка недоотриманого доходу (площа × медіана аналогів × 12) рахується лише там, де договору немає в жодному джерелі.</p>
+      <div class="tbl"><table id="vac"></table></div>
+    </div>
+    <div class="card internal-only">
+      <div class="row" style="justify-content:space-between;flex-wrap:wrap"><h3>Список для управлінського аналізу</h3><button class="btn sm ghost" id="mgCsv" type="button">Експорт для Excel</button></div>
+      <p class="hint">Правила: розбіжність статусу · довго в переліку без договору · ≥2 аукціонів не відбулися · ставка нижча за медіану аналогів. Пороги — у вкладці «Ознаки ризику».</p>
+      <div class="tbl"><table id="mg"></table></div>
+    </div>
+    <div class="grid2 internal-only">
+      <div class="card"><h3>Договори з переліку міста (554) за видом плати</h3><div id="chLease" class="bars"></div></div>
+      <div class="card"><h3>Рік закінчення строку договору</h3><div id="chTerm" class="bars"></div><p class="hint">201 договір зі строком до 30.06.2026 є в переліку чинних. Примітка ** у переліку: продовження на час воєнного стану (постанова КМУ №634).</p></div>
+    </div>
+  </section>
+
+  <!-- 3.3 -->
+  <section class="tab internal-only" id="t-risk">
+    <div class="ethic"><b>Ознака ризику — підстава для перевірки, а не доказ порушення.</b> Для кожного індикатора наведено легітимні пояснення. Імена фізичних осіб не показуються: переможці-фізособи позначені псевдонімами.</div>
+    <div class="card" style="margin-top:14px"><h3>Пороги правил (змінюються без зміни коду)</h3>
+      <div class="row" style="flex-wrap:wrap;gap:16px" id="cfg"></div>
+    </div>
+    <div class="grid3" id="rules"></div>
+    <div class="card">
+      <div class="row" style="justify-content:space-between;flex-wrap:wrap;gap:8px"><h3>Аукціони з ознаками ризику</h3>
+        <div class="row"><select id="rf" style="padding:6px 10px;border-radius:10px;border:1px solid var(--line)"><option value="">Усі ознаки</option></select><button class="btn sm ghost" id="riskCsv" type="button">Експорт CSV</button></div></div>
+      <div class="tbl"><table id="risk"></table></div>
+    </div>
+    <div class="card">
+      <div class="row" style="justify-content:space-between;flex-wrap:wrap"><h3>Договори з переліку міста з ознаками</h3><button class="btn sm ghost" id="leaseCsv" type="button">Експорт CSV</button></div>
+      <p class="hint">Орендарі — фізичні особи знеособлені. Посилання: сторінка PDF-переліку міста.</p>
+      <div class="tbl"><table id="lrisk"></table></div>
+    </div>
+  </section>
+
+  <!-- own case -->
+  <section class="tab" id="t-rec">
+    <div class="card"><h3>Чотири джерела — жодного спільного ключа</h3>
+      <div class="funnel" id="funnel"></div>
+      <p class="hint" style="margin-top:8px">Джерела рахують різне (об’єкти, договори, адреси), але саме тому їх треба зводити: у документах міста немає ідентифікатора Prozorro, в інвентарі — лише адреси.</p>
+    </div>
+    <div class="grid2">
+      <div class="card"><h3>Як зв’язалися дані</h3><div id="matchStats"></div></div>
+      <div class="card"><h3>Об’єкти орендодавця в Prozorro, яких немає в наборі міста</h3><div id="extraStats" class="bars"></div><p class="hint">Орендодавець — Управління майном комунальної власності міста (ЄДРПОУ 13967034), форма власності — комунальна. Статус «неактивний» може означати виключення з переліку.</p></div>
+    </div>
+    <div class="card">
+      <div class="row" style="justify-content:space-between;flex-wrap:wrap;gap:8px"><h3>Дефекти даних</h3><div class="row"><select id="df" style="padding:6px 10px;border-radius:10px;border:1px solid var(--line)"><option value="">Усі набори</option></select><button class="btn sm" id="defCsv" type="button">Завантажити data-defects.csv</button></div></div>
+      <div class="tbl"><table id="def"></table></div>
+    </div>
+    <div class="card"><h3>Розбіжності площі: Prozorro ↔ перелік договорів міста</h3><p class="hint">Адреса збігається, площа — ні. Від площі залежить орендна плата, тож кожен випадок варто звірити з технічною документацією. Частина — інше приміщення за тією самою адресою.</p><div class="tbl"><table id="area"></table></div></div>
+    <div class="card"><h3>Перелік приватизації 2026 ↔ інвентар</h3><div class="tbl"><table id="priv"></table></div></div>
+  </section>
+
+  <section class="tab" id="t-meth">
+    <div class="grid2">
+      <div class="card"><h3>Джерела даних</h3><div id="sources"></div></div>
+      <div class="card"><h3>Як працює рішення</h3>
+        <ol style="padding-left:18px;margin:0">
+          <li>Перелік P3-01 (553 ocid) збагачується через відкритий API Prozorro.Продажі: адреса, площа, координати, статус, балансоутримувач, орендодавець.</li>
+          <li>Для кожного об’єкта завантажуються всі пов’язані орендні аукціони (за полем <span class="mono">registryObjectId</span>).</li>
+          <li>Перелік договорів, інвентар і перелік приватизації міста зв’язуються з об’єктами за нормалізованою адресою (+ площа). Окремо показано, скільки записів зв’язано автоматично і скільки потребують ручної перевірки.</li>
+          <li>Індикатори рахуються за правилами з порогами; кожен сигнал має посилання на лот або рядок джерела.</li>
+          <li>Оновлення: скрипт <span class="mono">update.py</span> повторює збагачення з API та перебудовує цей файл — без змін у коді.</li>
+        </ol>
+      </div>
+    </div>
+    <div class="card"><h3>Правила та індикатори</h3><div class="tbl"><table id="rulesTbl"></table></div></div>
+    <div class="card"><h3>Обмеження</h3><ul id="limits" style="margin:0;padding-left:18px"></ul></div>
+  </section>
+
+  <!-- Функції управління (Положення, розділи 2, 3, 5) -->
+  <section class="tab" id="t-func">
+    <div class="pg-h"><div><div class="eyebrow">Положення про УМКВМ · розділ 2</div><h2>Функції управління</h2><p>Управління майном комунальної власності міста має 38 основних завдань. Ми згрупували їх за темами. Позначка <span class="tag-rm">RentMap</span> показує, де сервіс допомагає виконувати завдання.</p></div></div>
+    <div class="fgrid" id="fgrid"></div>
+    <div class="grid2" style="margin-top:14px">
+      <div class="card"><h3>Показники роботи <span class="hint">(розділ 3)</span></h3><ol class="ind" id="indList"></ol></div>
+      <div class="card"><h3>Права управління <span class="hint">(розділ 5)</span></h3>
+        <ul class="plain">
+          <li>Взаємодіє з іншими виконавчими органами, постійними комісіями ради, підприємствами й об’єднаннями громадян <span class="hint">(5.1)</span>.</li>
+          <li>Може залучати сторонні організації для робіт з приватизації, оренди, оформлення права власності, захисту в судах <span class="hint">(5.2)</span>.</li>
+          <li>Начальник, заступник і начальники відділів мають необмежений доступ до комунальних об’єктів для контролю <span class="hint">(5.3)</span>.</li>
+          <li>Вносить на депутатські комісії й сесію пропозиції щодо ефективнішого використання майна громади <span class="hint">(5.4)</span> <span class="tag-rm" title="Аналітика й звірка джерел дають підстави для таких пропозицій">RentMap</span></li>
+          <li>Отримує від комунальних підприємств, органів влади й організацій інформацію, потрібну для своїх завдань; обстежує житлові умови громадян на квартирному обліку <span class="hint">(5.5)</span>.</li>
+        </ul></div>
+    </div>
+  </section>
+
+  <!-- Положення -->
+  <section class="tab" id="t-pol">
+    <div class="pg-h"><div><div class="eyebrow">Документ П-СУЯ/01 · ISO 9001 · 8 сторінок</div><h2>Положення про Управління майном комунальної власності міста</h2><p>Нова редакція 2023 року — додаток до рішення сесії Полтавської міської ради восьмого скликання. У наданій копії номер і дата рішення не заповнені; чинну редакцію варто перевірити на сайті міської ради.</p></div></div>
+    <div class="facts">
+      <div><span>Статус</span><b>Виконавчий орган міської ради, юридична особа</b></div>
+      <div><span>Скорочено</span><b>УМКВМ · індекс 01-05</b></div>
+      <div><span>Підпорядкування</span><b>Міському голові та першому заступнику</b></div>
+      <div><span>Фінансування</span><b>Місцевий бюджет · неприбуткова установа</b></div>
+    </div>
+    <div class="acc">
+      <details open><summary><b>1</b>Загальні положення</summary><ul class="plain">
+        <li>Управління створене, щоб реалізовувати державну й регіональну політику щодо майна Полтавської міської територіальної громади та у сфері житлового законодавства.</li>
+        <li>Має самостійний баланс, печатку, рахунки в казначействі. Приватизує нерухоме майно й житловий фонд, здає в оренду, списує, продає, купує й передає майно громади, веде його облік і звітність.</li>
+        <li>Управління — орган приватизації житлового фонду й комунальних об’єктів громади; його начальник — керівник органу приватизації.</li>
+        <li>Начальника призначає і звільняє міський голова. Начальник діє від імені управління й від імені міської ради як засновника господарських товариств без доручення, затверджує посадові інструкції працівників.</li>
+        <li>Коли начальника немає, обов’язки виконує заступник або інший працівник за розпорядженням міського голови — зокрема підписує договори купівлі-продажу й оренди майна громади.</li>
+        <li>Діє на підставі Конституції, законів, рішень міської ради та виконкому, розпоряджень міського голови й цього Положення.</li></ul></details>
+      <details><summary><b>2</b>Основні завдання і функції</summary><p>38 завдань: від формування переліку нежитлових об’єктів і оренди до житлових питань і доступу до інформації. <button class="btn sm" type="button" data-go="func">Відкрити «Функції управління»</button></p></details>
+      <details><summary><b>3</b>Основні показники роботи</summary><ol class="ind" id="indList2"></ol></details>
+      <details><summary><b>4</b>Організаційна структура</summary>
+        <div class="org"><div class="o-top">Начальник управління</div><div class="o-mid"><span>Секретар керівника</span><div class="o-dep">Заступник начальника управління</div><span>Водій</span></div>
+        <div class="o-row"><div>Відділ оренди та приватизації комунального майна</div><div>Відділ з питань юридичного забезпечення та обліку комунального майна</div><div>Відділ обліку, розподілу та приватизації житла</div><div>Відділ бухгалтерського обліку та звітності</div></div></div>
+        <p class="hint">Перелік об’єктів, переданих в оренду, на порталі відкритих даних готує відділ оренди та приватизації комунального майна.</p></details>
+      <details><summary><b>5</b>Права щодо інших підрозділів та організацій</summary><p>Взаємодія з органами ради й підприємствами, залучення підрядників, доступ до комунальних об’єктів, пропозиції комісіям, отримання інформації. <button class="btn sm ghost" type="button" data-go="func">Детально</button></p></details>
+      <details><summary><b>6</b>Майно та фінанси управління</summary><ul class="plain">
+        <li>Майно управління формує засновник — Полтавська міська рада; воно відображається в самостійному балансі.</li>
+        <li>Майно належить громаді в особі міської ради й закріплене за управлінням на праві оперативного управління.</li>
+        <li>Джерела: майно від органів місцевого самоврядування, придбане за бюджетні кошти, інше майно, отримане законно.</li>
+        <li>Права, обов’язки й оплата праці працівників — за Законом «Про службу в органах місцевого самоврядування». Штатний розпис затверджують міський голова й начальник управління.</li></ul></details>
+      <details><summary><b>7</b>Порядок припинення</summary><p>Засновник, суд або інший орган, що вирішив припинити управління, призначає комісію з припинення (ліквідаційну). До неї переходять повноваження, вона складає передавальний акт або розподільчий баланс, проміжний ліквідаційний баланс. Управління вважається ліквідованим з дня запису в Єдиному державному реєстрі.</p></details>
+    </div>
+    <p class="hint" style="margin-top:12px">Джерело: текст Положення (П-СУЯ/01), наданий команді. Виклад скорочений — для юридично значущих дій користуйтеся оригіналом.</p>
+  </section>
+
+  <!-- Контакти -->
+  <section class="tab" id="t-cont">
+    <div class="pg-h"><div><div class="eyebrow">Орендодавець комунального майна Полтавської громади</div><h2>Контакти</h2><p>Управління майном комунальної власності міста — виконавчий орган Полтавської міської ради.</p></div></div>
+    <div class="cgrid">
+      <div class="card ccard">
+        <div class="person"><span class="ava" aria-hidden="true"><svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="#000" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></svg></span><div><b>КУРНАКОВА Наталія Олександрівна</b><span>Начальник Управління</span></div></div>
+        <div class="clist">
+          <a class="crow" href="tel:+380532561996"><span class="ci"><svg viewBox="0 0 24 24" fill="none" stroke="#000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2z"/></svg></span><span><small>Телефон</small>+380 (532) 56-19-96</span></a>
+          <a class="crow" href="mailto:majnopmr@rada-poltava.gov.ua"><span class="ci"><svg viewBox="0 0 24 24" fill="none" stroke="#000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/></svg></span><span><small>Електронна адреса</small>majnopmr@rada-poltava.gov.ua</span></a>
+          <a class="crow" href="https://www.openstreetmap.org/search?query=%D0%9F%D0%BE%D0%BB%D1%82%D0%B0%D0%B2%D0%B0%2C%20%D0%B2%D1%83%D0%BB%D0%B8%D1%86%D1%8F%20%D0%A1%D0%BE%D0%B1%D0%BE%D1%80%D0%BD%D0%BE%D1%81%D1%82%D1%96%2C%2036" target="_blank" rel="noopener"><span class="ci"><svg viewBox="0 0 24 24" fill="none" stroke="#000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21s7-6.2 7-12a7 7 0 0 0-14 0c0 5.8 7 12 7 12z"/><circle cx="12" cy="9" r="2.5"/></svg></span><span><small>Місцезнаходження (поштова адреса)</small>36000, м. Полтава, вул. Соборності, 36</span></a>
+          <div class="crow"><span class="ci"><svg viewBox="0 0 24 24" fill="none" stroke="#000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9h16M4 15h16M10 3 8 21M16 3l-2 18"/></svg></span><span><small>Код ЄДРПОУ</small>13967034</span></div>
+        </div>
+        <div class="row" style="gap:8px;flex-wrap:wrap;margin-top:14px"><a class="btn" href="tel:+380532561996" style="text-decoration:none">Подзвонити</a><a class="btn ghost" href="mailto:majnopmr@rada-poltava.gov.ua" style="text-decoration:none">Написати лист</a><button class="btn ghost" type="button" id="cCopy">Копіювати контакти</button></div>
+      </div>
+      <div class="card">
+        <h3>З якого питання звертатися</h3>
+        <div class="howto">
+          <button type="button" data-act="app"><b>Орендувати приміщення</b><span>Підготуйте заяву в сервісі й подайте через Prozorro.Продажі або до Управління</span></button>
+          <button type="button" data-go="map"><b>Знайти об’єкт</b><span>Карта й каталог комунальних об’єктів, що здаються в оренду</span></button>
+          <button type="button" data-act="report"><b>Повідомити про неточність</b><span>Відкрийте картку об’єкта → «Повідомити про проблему з даними»</span></button>
+          <button type="button" data-go="func"><b>Інші питання</b><span>Приватизація, житло, реєстрація права власності — див. функції управління</span></button>
+        </div>
+        <p class="hint" style="margin-top:10px">Управління відповідає на звернення й запити на інформацію у визначений законом строк (Положення, п. 33).</p>
+      </div>
+    </div>
+    <div class="card"><h3>Загальна канцелярія виконавчих органів міської ради</h3><div class="clist row3">
+      <a class="crow" href="tel:+380532562947"><span class="ci"><svg viewBox="0 0 24 24" fill="none" stroke="#000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2z"/></svg></span><span><small>Телефон</small>(0532) 56-29-47</span></a>
+      <a class="crow" href="mailto:cancelar@rada-poltava.gov.ua"><span class="ci"><svg viewBox="0 0 24 24" fill="none" stroke="#000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/></svg></span><span><small>Е-пошта</small>cancelar@rada-poltava.gov.ua</span></a>
+      <a class="crow" href="https://rada-poltava.gov.ua" target="_blank" rel="noopener"><span class="ci"><svg viewBox="0 0 24 24" fill="none" stroke="#000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3a14 14 0 0 1 0 18M12 3a14 14 0 0 0 0 18"/></svg></span><span><small>Сайт</small>rada-poltava.gov.ua</span></a></div>
+      <p class="hint" style="margin-top:8px">За даними колонтитула Положення про УМКВМ.</p></div>
+  </section>
+</main>
+</div>
+
+<div id="cmpBar" role="region" aria-label="Порівняння"><span id="cmpTxt"></span><button class="btn sm ghost" id="cmpGo" type="button">Порівняти</button><button class="btn sm" id="cmpClr" type="button" style="background:transparent">Очистити</button></div>
+<button id="botFab" type="button" aria-label="Відкрити чат-бот"><svg viewBox="0 0 24 24" fill="none" stroke="#000" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a8 8 0 0 1-11.6 7.1L4 20l1-4.6A8 8 0 1 1 21 12z"/><path d="M8.5 11h.01M12 11h.01M15.5 11h.01"/></svg><span class="badge">чат</span></button>
+<div id="bot" role="dialog" aria-label="Чат-бот RentMap">
+  <div class="bh"><div class="av">RM</div><div style="flex:1"><b>Помічник RentMap</b><span>Відповідає лише за даними · без вигадок</span></div><button class="star" id="botX" type="button" aria-label="Закрити">✕</button></div>
+  <div class="bm" id="bm"></div>
+  <div class="qr" id="botQR"></div>
+  <form id="botF"><input id="botIn" type="text" placeholder="Напишіть запит…" aria-label="Повідомлення"><button class="btn" type="submit">Надіслати</button></form>
+</div>
+<dialog id="appDlg"><div class="dlg-h"><div style="flex:1"><div class="hint" style="color:var(--ink2)">Оренда комунального майна Полтавської громади</div><h2 style="font-size:20px">Заява щодо оренди</h2></div><button class="btn sm ghost" id="appClose" type="button" aria-label="Закрити">✕</button></div><div class="dlg-b" id="appBody"></div></dialog>
+<dialog id="dlg"><div class="dlg-h"><button class="star" id="dFav" type="button" title="Додати в обране" aria-label="Обране">☆</button><div style="flex:1"><div class="hint" style="color:#cfe0ee" id="dOc"></div><h2 id="dTitle" style="font-size:20px"></h2></div><button class="btn sm ghost" id="dPrint" type="button">Друк довідки</button><button class="btn sm ghost" id="dClose" type="button" aria-label="Закрити">✕</button></div><div class="dlg-b" id="dBody"></div></dialog>
+
+<script>/*__LEAFLET_JS__*/</script>
+<script>/*__QR_JS__*/</script>
+<script>const DATA=/*__DATA__*/;</script>
+<script>
+(function(){
+const S=DATA.summary,R=DATA.rules,OBJ=DATA.objects,PR=DATA.procedures,LZ=DATA.leases,INV=DATA.inventory,EX=DATA.extra;
+const $=s=>document.querySelector(s),fmt=(n,d=0)=>n==null||isNaN(n)?'—':Number(n).toLocaleString('uk-UA',{maximumFractionDigits:d,minimumFractionDigits:d});
+const esc=s=>String(s==null?'':s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const ST={sold:'В оренді',approved:'У переліку',inactive:'Неактивне',waiting:'Очікує',active:'Активне'};
+const US={leased:'В оренді',available:'Доступне',check:'Потребує уточнення',conflict:'Потребує уточнення',inactive:'Неактивне'};
+const USD={conflict:'Prozorro: «у переліку», але в переліку договорів міста є договір на цю адресу й площу',check:'Prozorro: «у переліку»; за адресою є договір на інше приміщення — уточнити',available:'Prozorro: «у переліку»; договору немає в жодному джерелі',leased:'Prozorro: орендовано',inactive:'Prozorro: неактивний'};
+const UC={leased:'#2F6DB5',available:'#C77700',check:'#9B59B6',conflict:'#9B59B6',inactive:'#7A8494'};
+const UK=o=>o.use==='conflict'?'check':o.use;
+const SC={sold:'#2F6DB5',approved:'#C77700',inactive:'#9B59B6',waiting:'#C77700',active:'#C77700'};
+const LT={symbolic:'1,20 грн на рік',zero:'0,00 грн',paid:'Платна',none:'Без даних'};
+const PRO=id=>'https://prozorro.sale/planning/'+id+'/', AUC=id=>'https://prozorro.sale/auction/'+id+'/';
+const byOc={};OBJ.forEach(o=>byOc[o.ocid]=o);const procBy={};PR.forEach(p=>(procBy[p.ocid]=procBy[p.ocid]||[]).push(p));
+const lzBy={};LZ.forEach(l=>lzBy[l.n]=l);
+let CFG=Object.assign({},S.cfg);
+
+/* ---------- mode & tabs ---------- */
+function setMode(pub){document.body.classList.toggle('public',pub);$('#mPub').classList.toggle('on',pub);$('#mInt').classList.toggle('on',!pub);if(pub&&$('#t-risk').classList.contains('on'))show('map');render();}
+$('#mPub').onclick=()=>setMode(true);$('#mInt').onclick=()=>setMode(false);
+const INFO=['func','pol','cont'];
+function show(t){const hz=document.querySelector('.hero');if(hz)hz.style.display=t==='map'?'':'none';$('#kpis').style.display=INFO.includes(t)?'none':'';if(window.scrollY>60)window.scrollTo({top:0,behavior:'smooth'});document.querySelectorAll('nav button').forEach(b=>b.classList.toggle('on',b.dataset.t===t));document.querySelectorAll('.tab').forEach(s=>s.classList.toggle('on',s.id==='t-'+t));if(t==='map'&&map)setTimeout(()=>map.invalidateSize(),50);}
+document.querySelectorAll('nav button').forEach(b=>b.onclick=()=>show(b.dataset.t));
+$('#upd').textContent='Дані Prozorro: '+S.fetched.slice(0,10)+' · документи міста: 01.01–30.06.2026';
+
+/* ---------- KPIs ---------- */
+function kpis(){
+ $('#kpis').innerHTML=[
+  [fmt(S.n_obj),'об’єктів у наборі міста','у Prozorro за орендодавцем — '+fmt(S.n_obj_all)],
+  [fmt(S.use.conflict+S.use.check),'об’єктів з розбіжністю статусу','у Prozorro «у переліку», але в місті є договір · доступне без договору — '+fmt(S.use.available)],
+  [fmt(S.n_proc),'орендних аукціонів',S.one_bidder_share+'% завершених — з одним учасником'],
+  [fmt(S.n_leases),'договорів у переліку міста',fmt(S.lease_sum)+' грн/міс з ПДВ'],
+  [fmt(S.n_extra),'об’єктів Prozorro поза набором міста','орендодавець — Управління майном'],
+ ].map(k=>`<div class="kpi"><div class="v">${k[0]}</div><div class="l">${k[1]}</div><div class="s">${k[2]}</div></div>`).join('');
+}
+
+/* ---------- rules recompute (thresholds in UI) ---------- */
+function recompute(){
+ const win={};PR.forEach(p=>{if(p.status==='complete'&&p.winner_pub&&/Учасник-|ЄДРПОУ/.test(p.winner_pub))win[p.winner_pub]=(win[p.winner_pub]||0)+1});
+ const byA={};PR.forEach(p=>byA[p.auctionId]=p);
+ PR.forEach(p=>{const f=[];const o=byOc[p.ocid];
+  if(p.status==='complete'){if(p.nBids===1)f.push('one_bidder');
+   if(p.nBids>=2&&p.startValue&&p.awardValue&&p.awardValue/p.startValue-1<CFG.min_increase)f.push('min_increase');
+   if(p.winner_pub&&win[p.winner_pub]>=CFG.repeat_winner_min)f.push('repeat_winner');
+   if(p.method==='priorityEnglish'&&p.nBids===1)f.push('priority_no_comp');
+   if(p.rate&&o&&p.rate<CFG.low_rate_ratio*o.analog)f.push('low_rate');}
+  const q=byA[p.previousAuctionId];if(q&&p.startValue&&q.startValue&&p.startValue<q.startValue)f.push('unsucc_then_drop');
+  p.flags=f;p.score=f.reduce((a,k)=>a+R[k].w,0);});
+ OBJ.forEach(o=>{const f=[];if(o.use==='conflict')f.push('status_conflict');if((o.use==='available'||o.use==='check')&&o.vacant_days>CFG.long_vacant_days&&!o.first_contract)f.push('long_vacant');
+  if(o.n_unsucc>=CFG.repeat_unsuccessful_min)f.push('repeat_unsucc');o.flags=f;
+  const ps=procBy[o.ocid]||[];o.auc_flags=[...new Set(ps.flatMap(p=>p.flags))];o.score=f.reduce((a,k)=>a+R[k].w,0)+Math.max(0,...ps.map(p=>p.score));});
+ LZ.forEach(l=>{l.flags=l.flags.filter(k=>k!=='low_rate');const o0=l.area;if(l.rate&&l.commercial){const an=analogFor(l.area);if(l.rate<CFG.low_rate_ratio*an)l.flags.push('low_rate')}l.score=l.flags.reduce((a,k)=>a+R[k].w,0)});
+}
+function analogFor(a){const b=a<30?'<30':a<100?'30–100':a<300?'100–300':'300+';return S.med[b]||S.allmed}
+
+/* ---------- map ---------- */
+let map=null,layer=null,extraLayer=null;
+function initMap(){
+ if(typeof L==='undefined'){$('#map').innerHTML='<div class="note" style="margin:20px">Карта недоступна (немає бібліотеки). Каталог нижче працює.</div>';return}
+ map=L.map('map',{scrollWheelZoom:true}).setView([49.5885,34.5514],12);
+ // Локально відкритий файл не передає Referer: OSM і CARTO тоді віддають заглушки.
+ // Esri та OSM France працюють без Referer і без ключа (перевірено) — перемикач шарів унизу праворуч.
+ const esri=L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/{z}/{y}/{x}',{maxZoom:19,attribution:'Tiles © Esri — Esri, HERE, Garmin, © OpenStreetMap contributors'});
+ const topo=L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Topo_Map/MapServer/tile/{z}/{y}/{x}',{maxZoom:19,attribution:'Tiles © Esri'});
+ const osmfr=L.tileLayer('https://{s}.tile.openstreetmap.fr/osmfr/{z}/{x}/{y}.png',{subdomains:'abc',maxZoom:19,attribution:'© OpenStreetMap France | © OpenStreetMap contributors'});
+ esri.addTo(map);let errs=0;esri.on('tileerror',()=>{if(++errs===6&&map.hasLayer(esri)){map.removeLayer(esri);osmfr.addTo(map)}});
+ L.control.layers({'Вулиці (Esri)':esri,'Топографічна (Esri)':topo,'OpenStreetMap France':osmfr},null,{position:'topright'}).addTo(map);
+ let lastSz=PIN_SZ(12);map.on('zoomend',()=>{const sz=PIN_SZ(map.getZoom());if(sz===lastSz)return;lastSz=sz;[layer,extraLayer].forEach(g=>g.eachLayer(m=>{if(m._pin){m.setIcon(pinIcon(m._pin.u,m._pin,map.getZoom()));if(m===ACTIVE&&m._icon)m._icon.classList.add('on')}}))});
+ layer=L.layerGroup().addTo(map);extraLayer=L.layerGroup().addTo(map);
+}
+const fsel=()=>({q:$('#fq').value.trim().toLowerCase(),st:['available','check','leased','inactive'].filter(s=>$('#fs-'+s).checked),a1:+$('#fa1').value||0,a2:+$('#fa2').value||1e9,d:$('#fd').value,y:$('#fy').value,l:$('#fl').value,o:$('#fo').value,flag:$('#fflag').checked&&!document.body.classList.contains('public'),extra:$('#fextra').checked,fav:$('#ffav').checked});
+function filtered(){const f=fsel();return OBJ.filter(o=>f.st.includes(UK(o))&&o.totalArea>=f.a1&&o.totalArea<=f.a2&&(!f.d||o.district===f.d)&&(!f.y||o.ocid.slice(10,14)===f.y)&&(!f.l||(f.l==='none'?!o.list_type:o.list_type===f.l))&&(!f.o||o.owner===f.o)&&(!f.flag||o.score>0)&&(!f.fav||FAV.has(o.ocid))&&(!ASK||ASK(o))&&(!f.q||(o.addr+' '+o.ocid).toLowerCase().includes(f.q)));}
+/* ---------- map pins (концепція POLTAVA PROPERTY; кольори статусів без змін) ---------- */
+const PIN_IC={ /* Material Icons (Google, Apache 2.0): apartment · handshake · warning · description */
+ available:'<path d="M17 11V3H7v4H3v14h8v-4h2v4h8V11h-4zM7 19H5v-2h2v2zm0-4H5v-2h2v2zm0-4H5V9h2v2zm4 4H9v-2h2v2zm0-4H9V9h2v2zm0-4H9V5h2v2zm4 8h-2v-2h2v2zm0-4h-2V9h2v2zm0-4h-2V5h2v2zm4 12h-2v-2h2v2zm0-4h-2v-2h2v2z"/>',
+ leased:'<path d="M16.48 10.41c-.39.39-1.04.39-1.43 0l-4.47-4.46-7.05 7.04-.66-.63a3 3 0 0 1 0-4.24l4.24-4.24a3 3 0 0 1 4.24 0L16.48 9c.39.39.39 1.02 0 1.41zm.7-2.12c.78.78.78 2.05 0 2.83-1.27 1.27-2.61.22-2.83 0l-3.76-3.76-5.57 5.57a.996.996 0 0 0 0 1.41c.39.39 1.02.39 1.42 0l4.62-4.62.71.71-4.62 4.62a.996.996 0 0 0 0 1.41c.39.39 1.02.39 1.42 0l4.62-4.62.71.71-4.62 4.62a.996.996 0 1 0 1.41 1.41l4.62-4.62.71.71-4.62 4.62a.996.996 0 1 0 1.41 1.41l8.32-8.34a3 3 0 0 0 0-4.24l-4.24-4.24a3.001 3.001 0 0 0-4.18-.06l4.47 4.47z"/>',
+ check:'<path d="M1 21h22L12 2 1 21zm12-3h-2v-2h2v2zm0-4h-2v-4h2v4z"/>',
+ inactive:'<path d="M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z"/>'};
+const shade=(hex,k)=>{const n=parseInt(hex.slice(1),16);let r=n>>16,g=n>>8&255,b=n&255;const f=c=>Math.round(k<0?c*(1+k):c+(255-c)*k);return '#'+[f(r),f(g),f(b)].map(v=>Math.max(0,Math.min(255,v)).toString(16).padStart(2,'0')).join('')};
+(function(){const d=document.getElementById('pinDefs');if(!d)return;
+ d.innerHTML=Object.entries({available:UC.available,leased:UC.leased,check:UC.check,inactive:UC.inactive}).map(([k,c])=>`<linearGradient id="pg-${k}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${shade(c,.28)}"/><stop offset=".55" stop-color="${c}"/><stop offset="1" stop-color="${shade(c,-.22)}"/></linearGradient>`).join('');})();
+function pinSVG(u,o){o=o||{};const extra=u==='extra',c=extra?(o.c||'#6B7686'):UC[u];
+ const body=extra?`<path d="M20 50C14 42.5 4 31 4 19.5a16 16 0 0 1 32 0C36 31 26 42.5 20 50z" fill="#fff" stroke="${c}" stroke-width="3"/>`
+  :`<path d="M20 50C14 42.5 4 31 4 19.5a16 16 0 0 1 32 0C36 31 26 42.5 20 50z" fill="url(#pg-${u})" stroke="#fff" stroke-width="2.4"/><circle cx="20" cy="19.5" r="11" fill="${shade(c,-.18)}" stroke="rgba(255,255,255,.45)" stroke-width="1"/><path d="M10.5 13.5a11 11 0 0 1 9.5-5" fill="none" stroke="rgba(255,255,255,.55)" stroke-width="1.6" stroke-linecap="round"/>`;
+ const ic=extra?`<circle cx="20" cy="19.5" r="3.6" fill="${c}"/>`:`<g transform="translate(11.84 11.34) scale(.68)" fill="#fff">${PIN_IC[u]}</g>`;
+ const risk=o.risk?`<g class="rk"><circle cx="34" cy="7" r="6.4" fill="#D6473F" stroke="#fff" stroke-width="2"/><path d="M34 4v3.6" stroke="#fff" stroke-width="1.9" stroke-linecap="round"/><circle cx="34" cy="10" r="1" fill="#fff"/></g>`:'';
+ return `<svg viewBox="0 0 40 52" aria-hidden="true">${body}${ic}${risk}</svg>`}
+const PIN_SZ=z=>z>=16?40:z>=14?34:z>=13?28:24;
+function pinIcon(u,o,z){const w=Math.round(PIN_SZ(z)*(o&&o.k||1)),h=Math.round(w*1.3);
+ return L.divIcon({className:'pin'+(u==='extra'?' pin-x':''),html:`<div class="pin-in" style="--pc:${u==='extra'?'#6B7686':UC[u]}">${pinSVG(u,o)}</div>`,iconSize:[w,h],iconAnchor:[w/2,h-1],tooltipAnchor:[0,-h+4]})}
+let ACTIVE=null;
+function setActive(m){if(ACTIVE){if(ACTIVE._icon)ACTIVE._icon.classList.remove('on');ACTIVE.setZIndexOffset(0)}ACTIVE=m;if(m&&m._icon){m._icon.classList.add('on');m.setZIndexOffset(2000)}}
+document.querySelectorAll('.mpin').forEach(e=>{const u=e.dataset.u;e.innerHTML=pinSVG(u,{risk:!!e.dataset.risk})});
+function drawMap(list){
+ if(!map)return;layer.clearLayers();extraLayer.clearLayers();const pub=document.body.classList.contains('public');
+ list.forEach(o=>{if(!o.lat)return;const risk=!pub&&o.score>0;
+  const u=UK(o),k=o.totalArea>=300?1.12:o.totalArea<30?.9:1,z=map.getZoom();
+  const m=L.marker([o.lat,o.lng],{icon:pinIcon(u,{risk,k},z),riseOnHover:true,riseOffset:1500,keyboard:true,title:o.addr,alt:o.addr+' — '+US[o.use]});
+  m._pin={u,risk,k};m._oc=o.ocid;
+  m.bindTooltip(`<b>${esc(o.addr)}</b><br>${fmt(o.totalArea,1)} м² · ${US[o.use]}`,{direction:'top'});
+  m.on('click',()=>{setActive(m);openCard(o.ocid)});m.on('add',()=>{if(ACTIVE&&ACTIVE._oc===o.ocid){ACTIVE=m;m._icon.classList.add('on')}});m.addTo(layer);});
+ if(fsel().extra)EX.forEach(e=>{if(!e.lat)return;const mx=L.marker([e.lat,e.lng],{icon:pinIcon('extra',{c:SC[e.status]||'#6B7686',k:.8},map.getZoom()),riseOnHover:true});mx._pin={u:'extra',c:SC[e.status]||'#6B7686',k:.8};mx.bindTooltip(`<b>Поза набором міста</b><br>${esc(e.title)}<br>${ST[e.status]||e.status}`,{direction:'top'}).on('click',()=>window.open(PRO(e.ocid),'_blank')).addTo(extraLayer)});
+ const nog=list.filter(o=>!o.lat).length;$('#geoinfo').textContent=`На карті ${fmt(list.length-nog)} з ${fmt(list.length)}; без координат у джерелі — ${nog} (${(100*nog/Math.max(1,list.length)).toFixed(1)}%).`;
+}
+
+/* ---------- tables ---------- */
+function table(el,cols,rows,onclick,sortState){
+ const st=sortState||(el._s=el._s||{k:null,d:1});
+ if(st.k!==null){const c=cols[st.k];rows=rows.slice().sort((a,b)=>{const x=c.s?c.s(a):c.v(a),y=c.s?c.s(b):c.v(b);return (x>y?1:x<y?-1:0)*st.d})}
+ el.innerHTML='<thead><tr>'+cols.map((c,i)=>`<th class="${c.n?'num':''}" data-i="${i}">${c.h}${st.k===i?(st.d>0?' ▲':' ▼'):''}</th>`).join('')+'</tr></thead><tbody>'+rows.slice(0,800).map((r,ri)=>`<tr class="${onclick?'click':''}" data-ri="${ri}">`+cols.map(c=>`<td class="${c.n?'num':''}">${c.f?c.f(r):esc(c.v(r))}</td>`).join('')+'</tr>').join('')+(rows.length>800?`<tr><td colspan="${cols.length}" class="hint">Показано 800 з ${rows.length}. Звузьте фільтри або експортуйте CSV.</td></tr>`:'')+'</tbody>';
+ el.querySelectorAll('th').forEach(th=>th.onclick=()=>{const i=+th.dataset.i;st.d=st.k===i?-st.d:1;st.k=i;table(el,cols,rows,onclick,st)});
+ if(onclick)el.querySelectorAll('tbody tr[data-ri]').forEach(tr=>tr.onclick=()=>onclick(rows[+tr.dataset.ri]));
+}
+const pills=fl=>fl.map(k=>`<span class="pill flag" title="${esc(R[k].why)}">⚑ ${esc(R[k].title)}</span>`).join(' ');
+function catalog(list){
+ const pub=document.body.classList.contains('public');
+ $('#catTitle').textContent=`Каталог: ${fmt(list.length)} об’єктів · ${fmt(list.reduce((a,o)=>a+o.totalArea,0),0)} м²`;
+ const cols=[{h:'⚖',v:o=>CMP.has(o.ocid)?1:0,f:o=>`<input type="checkbox" class="cmpc" data-oc="${o.ocid}" ${CMP.has(o.ocid)?'checked':''} title="Додати до порівняння" aria-label="Порівняти" onclick="event.stopPropagation()">`},{h:'Адреса',v:o=>o.addr,f:o=>`${FAV.has(o.ocid)?'★ ':''}<b>${esc(o.addr)}</b><div class="hint mono">${o.ocid}</div>`},{h:'Район',v:o=>o.district||'—'},{h:'Площа, м²',n:1,v:o=>o.totalArea,f:o=>fmt(o.totalArea,1)},
+  {h:'Статус',v:o=>o.use,f:o=>`<span class="pill ${o.use}" title="${esc(USD[o.use])}">${US[o.use]}</span>`},{h:'Балансоутримувач',v:o=>o.owner||''},{h:'Аукціонів',n:1,v:o=>o.n_auc},
+  {h:'Остання ставка, грн/м²',n:1,v:o=>o.last_rate||0,f:o=>o.last_rate?fmt(o.last_rate,2):(o.last_period==='hour'?'погодинно':'—')}];
+ if(!pub)cols.push({h:'Ознаки',n:1,v:o=>o.score,f:o=>o.score?`<span class="pill flag">⚑ ${o.score}</span>`:''});
+ table($('#cat'),cols,list,o=>openCard(o.ocid));
+ bindCmp();
+}
+function render(){recompute();kpis();const l=filtered();drawMap(l);catalog(l);analytics();risk();recon();meth();calendar();areaTbl();calc();cmpBar();}
+
+/* ---------- card / довідка ---------- */
+function openCard(oc){
+ if(layer&&(!ACTIVE||ACTIVE._oc!==oc)){let f=null;layer.eachLayer(m=>{if(m._oc===oc)f=m});setActive(f)}
+ const o=byOc[oc];if(!o)return;const pub=document.body.classList.contains('public');const ps=(procBy[oc]||[]).slice().sort((a,b)=>a.datePublished<b.datePublished?1:-1);const l=o.lease?lzBy[o.lease]:null;
+ $('#dOc').innerHTML=`<a style="color:#cfe0ee" href="${PRO(oc)}" target="_blank" rel="noopener">${oc} ↗</a>`;$('#dTitle').textContent=o.addr;CUR=oc;$('#dFav').style.display='';$('#dFav').textContent=FAV.has(oc)?'★':'☆';$('#dPrint').style.display='';
+ let h=`<div class="kv">
+ <div>Статус використання</div><div><span class="pill ${o.use}">${US[o.use]}</span> ${o.priv?`<span class="pill">Приватизація: ${esc(o.priv)}</span>`:''}<div class="hint">${esc(USD[o.use])}</div></div>
+ <div>Статус у Prozorro</div><div>${ST[o.statusInList]} <span class="hint">· джерело: Prozorro.Продажі, ${S.fetched}</span></div>
+ <div>Площа</div><div>${o.totalArea?fmt(o.totalArea,1)+' м²':NA} ${o.locationInBuilding==='basement'?'· підвал':''}<span class="src-tag">Prozorro</span>${o.area_city&&Math.abs(o.area_city-o.totalArea)>1?`<div><span class="pill flag">У переліку договорів міста: ${fmt(o.area_city,1)} м²</span></div>`:''}</div>
+ <div>Район</div><div>${o.district?esc(o.district):NA}<span class="src-tag">Prozorro</span></div>
+ <div>Балансоутримувач</div><div>${o.owner?esc(o.owner):NA} <span class="hint mono">${esc(o.owner_id||'')}</span><span class="src-tag">Prozorro</span></div>
+ <div>Орган управління</div><div>${o.governer?esc(o.governer):NA}<span class="src-tag">Prozorro</span></div>
+ <div>Тип переліку</div><div>${o.list_type==='First'?'Перший (аукціон)':'Не визначено в джерелі'}</div>
+ <div>Внесено до Prozorro</div><div>${o.datePublished}${o.vacant_days?` · вільне ${fmt(o.vacant_days)} дн.`:''}</div>
+ <div>До першого аукціону / договору</div><div>${o.days_to_auc!=null?fmt(o.days_to_auc)+' дн.':'—'} / ${o.days_to_contract!=null?fmt(o.days_to_contract)+' дн.':'—'}</div>
+ <div>Орієнтовна плата</div><div>${o.totalArea?`≈ <b>${fmt(o.totalArea*o.analog,0)} грн/міс</b> без ПДВ (${fmt(o.analog,2)} грн/м² — медіана аналогів)`:NA}${o.lost_year?` · оцінка недоотриманого: <b>${fmt(o.lost_year)} грн/рік</b>`:''}<span class="src-tag">розрахунок RentMap, орієнтовно</span></div>
+ <div>Інвентарний перелік</div><div>${o.inv.length?'№ '+o.inv.join(', '):'<span class="pill flag">адреси немає в переліку</span>'}<span class="src-tag">перелік нежитлових об’єктів, 01.01.2026</span></div>
+ </div>`;
+ if(!pub&&(o.flags.length||o.auc_flags.length))h+=`<h3 style="margin:16px 0 8px">Ознаки ризику</h3><div class="ethic" style="margin-bottom:8px">Підстава для перевірки, а не доказ порушення.</div>`+[...o.flags,...o.auc_flags].map(k=>`<div style="margin:6px 0">${pills([k])} <span class="hint">${esc(R[k].formula)}. Можливі легітимні причини: ${esc(R[k].legit)}</span></div>`).join('');
+ h+=`<h3 style="margin:16px 0 8px">Аукціони (${ps.length})</h3>`+(ps.length?'<div class="tbl"><table><thead><tr><th>Лот</th><th>Дата</th><th>Метод</th><th>Статус</th><th class="num">Старт, грн</th><th class="num">Фінал, грн</th><th class="num">Ставок</th><th>Переможець</th>'+(pub?'':'<th>Ознаки</th>')+'</tr></thead><tbody>'+ps.map(p=>`<tr><td><a class="mono" href="${AUC(p.auctionId)}" target="_blank" rel="noopener">${p.auctionId}</a></td><td>${p.auctionDate||p.datePublished}</td><td>${{english:'англійський',priorityEnglish:'з переважним правом',dutch:'голландський'}[p.method]||p.method}</td><td>${{complete:'відбувся',unsuccessful:'не відбувся',cancelled:'скасовано'}[p.status]||p.status}</td><td class="num">${fmt(p.startValue,2)}${p.valuePeriod==='hour'?'/год':''}</td><td class="num">${fmt(p.awardValue,2)}</td><td class="num">${p.nBids}</td><td>${esc(p.winner_pub||'—')}</td>${pub?'':`<td>${pills(p.flags)}</td>`}</tr>`).join('')+'</tbody></table></div>':'<p class="hint">Аукціонів у Prozorro.Продажі не знайдено (об’єкт міг бути переданий за договором до запуску системи або без аукціону).</p>');
+ h+=`<h3 style="margin:16px 0 8px">Договір у переліку міста (30.06.2026)</h3>`+(l?`<div class="kv"><div>Зв’язок</div><div>${o.lease_match==='exact'?'<span class="pill ok">адреса + площа</span>':'<span class="pill">лише адреса — потребує перевірки</span>'} · рядок №${l.n}, стор. ${l.page} PDF</div>
+ <div>Орендар</div><div>${esc(l.tenant_pub)}</div><div>Договір</div><div>${esc(l.contract_no?'№'+l.contract_no:'без номера')} від ${esc(l.contract_date||'—')} · до ${esc(l.term||'—')}</div>
+ <div>Мета</div><div>${esc(l.purpose)}</div><div>Плата</div><div>${l.rent_type==='paid'?fmt(l.rent_month,2)+' грн/міс з ПДВ'+(l.rate?` · ${fmt(l.rate,2)} грн/м² без ПДВ`:''):LT[l.rent_type]}</div>
+ ${!pub&&l.flags.length?`<div>Ознаки</div><div>${pills(l.flags)}</div>`:''}</div>`:'<p class="hint">Відповідного рядка в переліку договорів не знайдено.</p>');
+ h+=`<div class="row" style="margin-top:14px;gap:8px;flex-wrap:wrap"><button class="btn" type="button" id="cApp">Подати заяву щодо цього об’єкта</button><a class="btn ghost" style="text-decoration:none" href="${PRO(oc)}" target="_blank" rel="noopener">Відкрити в Prozorro ↗</a></div>`;
+ h+=`<div class="grid2" style="margin-top:16px"><div><h3 style="margin:0 0 8px">Повідомити про проблему</h3><div class="rep"><select id="rCat" aria-label="Категорія"><option>Пошкодження або незадовільний стан</option><option>Можливе використання не за призначенням</option><option>Невідповідність адреси або площі</option><option>Застаріла інформація</option><option>Інше</option></select><textarea id="rTxt" rows="3" placeholder="Опишіть, що побачили (без персональних даних інших людей)" style="margin-top:6px"></textarea><button class="btn sm" id="rGo" type="button" style="margin-top:6px">Сформувати звернення</button><div id="rOut"></div></div><p class="hint">Демонстрація: файл не надсилає дані. Текст звернення можна скопіювати й подати до Управління майном (вул. Соборності, 36) або через офіційну форму звернень міської ради. Облік і статуси звернень — наступний етап (потрібен сервер).</p></div><div style="text-align:center"><div id="qr"></div><div class="hint">QR — сторінка об’єкта в Prozorro.Продажі</div></div></div>`;
+ h+=`<p class="hint" style="margin-top:14px">Джерела: Prozorro.Продажі (API), перелік об’єктів оренди P3-01, перелік переданих в оренду об’єктів на 30.06.2026, перелік нежитлових об’єктів на 01.01.2026. Дані на ${S.fetched}.</p>`;
+ $('#dBody').innerHTML=h;$('#dlg').showModal();
+ $('#cApp').onclick=()=>{$('#dlg').close();openApp(oc)};
+ try{const q=qrcode(0,'M');q.addData(PRO(oc));q.make();$('#qr').innerHTML=q.createSvgTag({cellSize:3,margin:2,scalable:false});}catch(e){$('#qr').textContent=''}
+ $('#rGo').onclick=()=>{const t=`Звернення щодо об’єкта комунального майна\nОб’єкт: ${o.addr}\nID Prozorro.Продажі: ${oc} (${PRO(oc)})\nКатегорія: ${$('#rCat').value}\nОпис: ${$('#rTxt').value.trim()||'—'}\nДата: ${new Date().toLocaleDateString('uk-UA')}\nПрошу перевірити та повідомити про результат.`;
+  $('#rOut').innerHTML=`<textarea readonly rows="7" style="width:100%;margin-top:6px;font:12px Inter,sans-serif;padding:8px;border:1px solid var(--line);border-radius:10px">${esc(t)}</textarea><button class="btn sm ghost" id="rCopy" type="button">Копіювати текст</button>`;
+  $('#rCopy').onclick=()=>{navigator.clipboard&&navigator.clipboard.writeText(t).then(()=>$('#rCopy').textContent='Скопійовано ✓').catch(()=>$('#rCopy').textContent='Виділіть текст і скопіюйте')};};
+}
+$('#dClose').onclick=()=>$('#dlg').close();$('#dPrint').onclick=()=>window.print();
+
+/* ---------- analytics ---------- */
+function bars(el,items,unit,max){max=max||Math.max(...items.map(i=>i[1]),1);el.innerHTML=items.map(i=>`<div class="b" title="${esc(i[0])}: ${fmt(i[1],unit==='грн'?2:0)} ${unit}"><span>${esc(i[0])}</span><div class="track"><div class="fill" style="width:${(100*i[1]/max).toFixed(1)}%"></div></div><span class="num">${fmt(i[1],unit==='грн'?2:0)}</span></div>`).join('')}
+const med=a=>{a=a.filter(x=>x!=null).sort((x,y)=>x-y);return a.length?(a.length%2?a[(a.length-1)/2]:(a[a.length/2-1]+a[a.length/2])/2):null};
+function analytics(){
+ const dt=OBJ.map(o=>o.days_to_contract).filter(x=>x!=null),da=OBJ.map(o=>o.days_to_auc).filter(x=>x!=null);
+ $('#anTiles').innerHTML=[[fmt(S.area_by_use.leased,0)+' м²','площа в оренді (Prozorro)',fmt(S.use.leased)+' об’єктів'],[fmt(S.area_by_use.conflict+S.area_by_use.check,0)+' м²','площа з розбіжністю статусу',fmt(S.use.conflict+S.use.check)+' об’єктів · доступне без договору: '+fmt(S.use.available)],[fmt(S.allmed,2)+' грн/м²','медіанна ставка (усі групи)','без ПДВ, на місяць']].map(k=>`<div class="kpi"><div class="v">${k[0]}</div><div class="l">${k[1]}</div><div class="s">${k[2]}</div></div>`).join('');
+ const ds=['Шевченківський','Київський','Подільський','Полтавський',null];
+ $('#chDistrict').innerHTML='<table><thead><tr><th>Район</th><th class="num">В оренді</th><th class="num">Доступні</th><th class="num">Уточнити</th><th class="num">Неактивні</th><th class="num">Площа, м²</th></tr></thead><tbody>'+ds.map(d=>{const l=OBJ.filter(o=>o.district===d);return `<tr><td>${d||'Не вказано / села'}</td><td class="num">${l.filter(o=>o.use==='leased').length}</td><td class="num">${l.filter(o=>o.use==='available').length}</td><td class="num">${l.filter(o=>UK(o)==='check').length}</td><td class="num">${l.filter(o=>o.use==='inactive').length}</td><td class="num">${fmt(l.reduce((a,o)=>a+o.totalArea,0),0)}</td></tr>`}).join('')+'</tbody></table>';
+ bars($('#chYear'),Object.entries(S.years).sort(),'об’єктів');
+ bars($('#chRate'),['<30','30–100','100–300','300+'].map(k=>[k+' м²',S.med[k]]),'грн');
+ $('#chTime').innerHTML=`<div class="kv"><div>Медіана: від внесення до першого аукціону</div><div><b>${fmt(med(da))} дн.</b> (${da.length} об’єктів)</div><div>Медіана: від внесення до договору</div><div><b>${fmt(med(dt))} дн.</b> (${dt.length} об’єктів)</div><div>Об’єктів без жодного аукціону</div><div><b>${fmt(OBJ.filter(o=>!o.n_auc).length)}</b> з ${OBJ.length}</div><div>«У переліку» без договору понад ${CFG.long_vacant_days} дн.</div><div><b>${fmt(OBJ.filter(o=>o.flags.includes('long_vacant')).length)}</b></div></div>`;
+ const ow={};OBJ.forEach(o=>ow[o.owner]=(ow[o.owner]||0)+o.totalArea);bars($('#chOwner'),Object.entries(ow).sort((a,b)=>b[1]-a[1]).slice(0,10).map(([k,v])=>[k.length>40?k.slice(0,38)+'…':k,Math.round(v)]),'м²');
+ const vac=OBJ.filter(o=>o.statusInList==='approved');/* усі «у переліку» з поясненням статусу */
+ table($('#vac'),[{h:'Адреса',v:o=>o.addr,f:o=>`<b>${esc(o.addr)}</b>`},{h:'Статус',v:o=>o.use,f:o=>`<span class="pill ${o.use}" title="${esc(USD[o.use])}">${US[o.use]}</span>`},{h:'Площа, м²',n:1,v:o=>o.totalArea,f:o=>fmt(o.totalArea,1)},{h:'Днів у переліку',n:1,v:o=>o.vacant_days},{h:'Аукціонів / не відбулися',n:1,v:o=>o.n_auc,f:o=>o.n_auc+' / '+o.n_unsucc},{h:'Медіана аналогів',n:1,v:o=>o.analog,f:o=>fmt(o.analog,2)},{h:'Оцінка, грн/рік',n:1,v:o=>o.lost_year,f:o=>o.lost_year?'<b>'+fmt(o.lost_year)+'</b>':'<span class="hint">не рахується — є договір</span>'}],vac.sort((a,b)=>b.lost_year-a.lost_year),o=>openCard(o.ocid));
+ const mgl=OBJ.filter(o=>o.flags.length||o.auc_flags.includes('low_rate'));
+ table($('#mg'),[{h:'Адреса',v:o=>o.addr,f:o=>`<b>${esc(o.addr)}</b>`},{h:'Статус',v:o=>o.use,f:o=>`<span class="pill ${o.use}">${US[o.use]}</span>`},{h:'Площа',n:1,v:o=>o.totalArea,f:o=>fmt(o.totalArea,1)},{h:'Правило',v:o=>[...o.flags,...o.auc_flags.filter(k=>k==='low_rate')].join(','),f:o=>pills([...o.flags,...o.auc_flags.filter(k=>k==='low_rate')])},{h:'Оцінка, грн/рік',n:1,v:o=>o.lost_year,f:o=>o.lost_year?fmt(o.lost_year):'—'}],mgl,o=>openCard(o.ocid));
+ bars($('#chLease'),Object.entries(S.lease_types).map(([k,v])=>[LT[k],v]),'договорів');
+ const ty={};LZ.forEach(l=>{if(l.term){const y=l.term.slice(0,4);ty[y]=(ty[y]||0)+1}});bars($('#chTerm'),Object.entries(ty).sort().map(([k,v])=>[k,v]),'договорів');
+}
+
+/* ---------- risk ---------- */
+const CFGL={min_increase:['Мінімальне підвищення, %',100],low_rate_ratio:['Ставка < % медіани',100],long_vacant_days:['Довго вільне, днів',1],repeat_winner_min:['Повторних перемог ≥',1],repeat_unsuccessful_min:['Аукціонів, що не відбулися ≥',1]};
+function cfgUI(){$('#cfg').innerHTML=Object.entries(CFGL).map(([k,[l,m]])=>`<label class="hint">${l}<br><input type="number" data-k="${k}" data-m="${m}" value="${+(CFG[k]*m).toFixed(2)}" style="width:110px;padding:6px 8px;border:1px solid var(--line);border-radius:8px"></label>`).join('')+'<button class="btn sm ghost" id="cfgReset" type="button">Пороги за замовчуванням</button>';
+ $('#cfg').querySelectorAll('input').forEach(i=>i.onchange=()=>{CFG[i.dataset.k]=(+i.value)/(+i.dataset.m);render()});$('#cfgReset').onclick=()=>{CFG=Object.assign({},S.cfg);cfgUI();render()};}
+function risk(){
+ const cnt=k=>PR.filter(p=>p.flags.includes(k)).length+OBJ.filter(o=>o.flags.includes(k)).length+LZ.filter(l=>l.flags.includes(k)).length;
+ $('#rules').innerHTML=Object.entries(R).map(([k,r])=>`<div class="rule"><div class="row" style="justify-content:space-between"><h4>${esc(r.title)}</h4><span class="c">${cnt(k)}</span></div><small><b>Формула:</b> ${esc(r.formula)}</small><small><b>Чому ризик:</b> ${esc(r.why)}</small><small><b>Легітимні пояснення:</b> ${esc(r.legit)}</small><small class="hint">Рівень: ${{auction:'аукціон',object:'об’єкт',lease:'договір'}[r.level]} · вага ${r.w}</small></div>`).join('');
+ const sel=$('#rf');if(sel.options.length<2)Object.entries(R).filter(([k,r])=>r.level==='auction').forEach(([k,r])=>sel.add(new Option(r.title,k)));
+ const f=sel.value;const rows=PR.filter(p=>p.flags.length&&(!f||p.flags.includes(f))).sort((a,b)=>b.score-a.score);
+ table($('#risk'),[{h:'Лот',v:p=>p.auctionId,f:p=>`<a class="mono" href="${AUC(p.auctionId)}" target="_blank" rel="noopener" onclick="event.stopPropagation()">${p.auctionId}</a>`},{h:'Об’єкт',v:p=>(byOc[p.ocid]||{}).addr||p.ocid},{h:'Дата',v:p=>p.auctionDate||p.datePublished},{h:'Ставок',n:1,v:p=>p.nBids},{h:'Старт → фінал, грн',n:1,v:p=>p.awardValue||0,f:p=>fmt(p.startValue,2)+' → '+fmt(p.awardValue,2)},{h:'Переможець',v:p=>p.winner_pub||'—'},{h:'Ознаки',v:p=>p.flags.join(','),f:p=>pills(p.flags)},{h:'Бал',n:1,v:p=>p.score}],rows,p=>openCard(p.ocid));
+ const lr=LZ.filter(l=>l.flags.some(k=>k!=='symbolic_rent'));
+ table($('#lrisk'),[{h:'№',n:1,v:l=>l.n},{h:'Адреса',v:l=>l.address},{h:'Орендар',v:l=>l.tenant_pub},{h:'Площа',n:1,v:l=>l.area,f:l=>fmt(l.area,1)},{h:'Строк',v:l=>l.term||''},{h:'Плата',n:1,v:l=>l.rent_month||0,f:l=>l.rent_type==='paid'?fmt(l.rent_month,2):LT[l.rent_type]},{h:'Ознаки',v:l=>l.flags.join(','),f:l=>pills(l.flags)},{h:'PDF',n:1,v:l=>l.page,f:l=>'стор. '+l.page}],lr,l=>{if(l.objs.length)openCard(l.objs[0])});
+}
+$('#rf').onchange=()=>risk();
+
+/* ---------- reconciliation ---------- */
+function recon(){
+ $('#funnel').innerHTML=[[S.n_obj_all,'об’єктів у Prozorro.Продажі','орендодавець — Управління майном (ЄДРПОУ 13967034)','API, '+S.fetched.slice(0,10)],[S.n_obj,'об’єктів у відкритому наборі міста','listProzorroSales: лише ocid, назва, url','P3-01'],[S.n_leases,'договорів у переліку оренди','орендар, площа, строк, ставка','станом на 30.06.2026'],[S.n_inv,'адрес в інвентарі нежитлових об’єктів','без площ і балансоутримувачів','станом на 01.01.2026'],[S.report_contracts,'договорів «укладено (продовжено)»','звіт Управління за І півріччя 2026','надходження від оренди '+fmt(S.report_income_h1)+' грн'],[DATA.privatization.length,'об’єктів у переліку приватизації','рішення 74 та 81 сесій','2026 рік']].map(s=>`<div class="src"><div class="n">${fmt(s[0])}</div><div class="t">${s[1]}</div><div class="d">${s[2]}</div><div class="d">${s[3]}</div></div>`).join('');
+ const ol=S.obj_lease;
+ $('#matchStats').innerHTML=`<div class="match">
+ <div><b>Об’єкти набору ↔ перелік договорів</b></div><div></div>
+ <div>Автоматично: адреса + площа (±1 м²)</div><div class="num"><span class="pill ok">${ol.exact}</span></div>
+ <div>Лише за адресою — ручна перевірка</div><div class="num"><span class="pill">${ol.address}</span></div>
+ <div>Не знайдено</div><div class="num"><span class="pill flag">${ol.none}</span></div>
+ <div style="margin-top:8px"><b>Договори ↔ інвентар</b></div><div></div>
+ <div>Договорів зі знайденою адресою в інвентарі</div><div class="num"><span class="pill ok">${S.lease_inv_match} з ${S.n_leases}</span></div>
+ <div>Адрес інвентарю без жодного договору оренди</div><div class="num"><span class="pill">${S.inv_no_lease}</span></div>
+ <div style="margin-top:8px"><b>Об’єкти набору ↔ інвентар</b></div><div></div>
+ <div>Об’єктів, чия адреса є в інвентарі</div><div class="num"><span class="pill ok">${S.obj_inv} з ${S.n_obj}</span></div>
+ </div><p class="hint">Адреса інвентарю без договору ще не означає «порожнє приміщення»: частина об’єктів використовується закладами на балансі без оренди.</p>`;
+ bars($('#extraStats'),Object.entries(S.extra_status).sort((a,b)=>b[1]-a[1]).map(([k,v])=>[(ST[k]||k)+(k==='sold'?' (орендовано)':k==='approved'?' (у переліку)':''),v]),'об’єктів');
+ const dsel=$('#df');if(dsel.options.length<2)[...new Set(DATA.defects.map(d=>d.dataset))].forEach(s=>dsel.add(new Option(s,s)));
+ const rows=DATA.defects.filter(d=>!dsel.value||d.dataset===dsel.value);
+ table($('#def'),[{h:'Набір',v:d=>d.dataset},{h:'Запис',v:d=>d.record,f:d=>`<span class="mono">${esc(d.record)}</span>`},{h:'Дефект',v:d=>d.defect},{h:'Опис',v:d=>d.description},{h:'Що зробити',v:d=>d.action}],rows,d=>{if(byOc[d.record])openCard(d.record);else if(/^RGL/.test(d.record))window.open(PRO(d.record),'_blank')});
+ table($('#priv'),[{h:'Адреса',v:p=>p.address},{h:'Площа, м²',n:1,v:p=>p.area,f:p=>fmt(p.area,1)},{h:'Статус',v:p=>p.status},{h:'В інвентарі',v:p=>p.in_inv,f:p=>p.in_inv?'<span class="pill ok">так</span>':'<span class="pill flag">немає</span>'}],DATA.privatization);
+}
+$('#df').onchange=()=>recon();
+
+/* ---------- methodology ---------- */
+function meth(){
+ $('#sources').innerHTML=`<ul style="margin:0;padding-left:18px">
+ <li><b>Перелік об’єктів оренди в Prozorro.Продажі (P3-01)</b> — 553 записи, data.gov.ua / пакет хакатону.</li>
+ <li><b>Prozorro.Продажі, відкритий API</b> — procedure.prozorro.sale/api: реєстр об’єктів (registry) і пошук процедур (search). Отримано ${S.fetched} UTC.</li>
+ <li><b>Перелік переданих в оренду об’єктів станом на 30.06.2026</b> — PDF Управління майном, 83 с., 554 договори.</li>
+ <li><b>Перелік нежитлових об’єктів станом на 01.01.2026</b> — PDF, 459 адрес.</li>
+ <li><b>Перелік об’єктів, що підлягають приватизації у 2026</b> — рішення 74 сесії (17.12.2025) і 81 сесії (17.07.2026).</li>
+ <li><b>Звіт Управління майном за І півріччя 2026</b>.</li></ul>`;
+ table($('#rulesTbl'),[{h:'Індикатор',v:([k,r])=>r.title},{h:'Формула і поріг',v:([k,r])=>r.formula},{h:'Чому ризик',v:([k,r])=>r.why},{h:'Легітимні пояснення',v:([k,r])=>r.legit},{h:'Вага',n:1,v:([k,r])=>r.w}],Object.entries(R));
+ $('#limits').innerHTML=['Ставки договорів міста наведені з ПДВ, аукціонні — без ПДВ: для порівняння ставки договорів поділено на 1,2.','Аукціони з погодинною оплатою (заклади освіти) не беруть участі в розрахунку ставок грн/м²/міс.','Зв’язування документів міста виконано за нормалізованою адресою; '+S.obj_lease.address+' випадків потребують ручної перевірки.','Ідентифікатори частини переможців приховані в самому джерелі (Prozorro) — показник повторних перемог рахується лише для відкритих кодів.','Оцінка недоотриманого доходу — орієнтир (медіана аналогів), а не нарахування.','Набір P3-01 містить лише об’єкти, внесені до Prozorro.Продажі, — це не повний перелік комунального майна.','Персональні дані: імена фізичних осіб не показуються; фізособи-переможці позначені псевдонімами.'].map(s=>`<li>${esc(s)}</li>`).join('');
+}
+
+/* ---------- exports ---------- */
+function csv(name,head,rows){const e=v=>{v=v==null?'':String(v);return /[",;\n]/.test(v)?'"'+v.replace(/"/g,'""')+'"':v};const t='﻿'+[head.join(';')].concat(rows.map(r=>r.map(e).join(';'))).join('\n');const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([t],{type:'text/csv;charset=utf-8'}));a.download=name;a.click();}
+$('#fcsv').onclick=()=>csv('rentmap_objects_enriched.csv',['ocid','url','адреса','район','площа_м2','статус_prozorro','статус_використання','тип_переліку','балансоутримувач','lat','lng','дата_внесення','аукціонів','остання_ставка_грн_м2','рядок_переліку_договорів','джерело','дата_отримання'],filtered().map(o=>[o.ocid,PRO(o.ocid),o.addr,o.district,o.totalArea,ST[o.statusInList],US[o.use],o.list_type||'',o.owner,o.lat,o.lng,o.datePublished,o.n_auc,o.last_rate,o.lease,'Prozorro.Продажі API',S.fetched]));
+$('#vacCsv').onclick=()=>csv('rentmap_vacant.csv',['ocid','адреса','статус_використання','площа','днів_у_переліку','аукціонів','не_відбулися','медіана_аналогів','оцінка_грн_рік'],OBJ.filter(o=>o.statusInList==='approved').map(o=>[o.ocid,o.addr,US[o.use],o.totalArea,o.vacant_days,o.n_auc,o.n_unsucc,o.analog,o.lost_year]));
+$('#mgCsv').onclick=()=>csv('rentmap_management_list.csv',['ocid','адреса','статус','площа','правила','оцінка_грн_рік'],OBJ.filter(o=>o.flags.length||o.auc_flags.includes('low_rate')).map(o=>[o.ocid,o.addr,ST[o.statusInList],o.totalArea,[...o.flags,...o.auc_flags].map(k=>R[k].title).join(' | '),o.lost_year]));
+$('#riskCsv').onclick=()=>csv('rentmap_risk_auctions.csv',['лот','url','ocid','дата','ставок','старт','фінал','ознаки','бал'],PR.filter(p=>p.flags.length).map(p=>[p.auctionId,AUC(p.auctionId),p.ocid,p.auctionDate,p.nBids,p.startValue,p.awardValue,p.flags.map(k=>R[k].title).join(' | '),p.score]));
+$('#leaseCsv').onclick=()=>csv('rentmap_lease_flags.csv',['№','стор_PDF','адреса','орендар','площа','строк','плата','ознаки'],LZ.filter(l=>l.flags.length).map(l=>[l.n,l.page,l.address,l.tenant_pub,l.area,l.term,l.rent_type==='paid'?l.rent_month:LT[l.rent_type],l.flags.map(k=>R[k].title).join(' | ')]));
+$('#defCsv').onclick=()=>csv('data-defects.csv',['dataset','record','defect','description','action'],DATA.defects.map(d=>[d.dataset,d.record,d.defect,d.description,d.action]));
+
+/* ---------- favourites, compare, assistant, calendar, area, calc ---------- */
+var CUR=null,ASK=null;const NA='<span class="hint">немає підтверджених даних</span>';
+const FAV=new Set((()=>{try{return JSON.parse(localStorage.getItem('rm_fav')||'[]')}catch(e){return []}})());
+const saveFav=()=>{try{localStorage.setItem('rm_fav',JSON.stringify([...FAV]))}catch(e){}};
+$('#dFav').onclick=()=>{if(!CUR)return;FAV.has(CUR)?FAV.delete(CUR):FAV.add(CUR);saveFav();$('#dFav').textContent=FAV.has(CUR)?'★':'☆';catalog(filtered())};
+const CMP=new Set();
+function bindCmp(){document.querySelectorAll('.cmpc').forEach(c=>c.onchange=()=>{const oc=c.dataset.oc;if(c.checked){if(CMP.size>=3){c.checked=false;return}CMP.add(oc)}else CMP.delete(oc);cmpBar()})}
+function cmpBar(){$('#cmpBar').classList.toggle('on',CMP.size>0);$('#cmpTxt').textContent=`Обрано для порівняння: ${CMP.size} з 3`}
+$('#cmpClr').onclick=()=>{CMP.clear();cmpBar();catalog(filtered())};
+$('#cmpGo').onclick=()=>{const os=[...CMP].map(k=>byOc[k]);if(!os.length)return;const pub=document.body.classList.contains('public');
+ const rows=[['Статус',o=>`<span class="pill ${o.use}">${US[o.use]}</span>`],['Площа, м²',o=>o.totalArea?fmt(o.totalArea,1):NA],['Район',o=>o.district||NA],['Балансоутримувач',o=>esc(o.owner||'')],['Аукціонів (не відбулися)',o=>o.n_auc+' ('+o.n_unsucc+')'],['Остання ставка, грн/м²/міс',o=>o.last_rate?fmt(o.last_rate,2):(o.last_period==='hour'?'погодинно':NA)],['Медіана аналогів, грн/м²',o=>fmt(o.analog,2)],['Орієнтовна плата, грн/міс',o=>o.totalArea?'≈ '+fmt(o.totalArea*o.analog,0):NA],['Договір у переліку міста',o=>{const l=o.lease?lzBy[o.lease]:null;return l?`№${esc(l.contract_no||'б/н')} до ${esc(l.term||'—')}<br><span class="hint">${esc(l.purpose)}</span>`:NA}],['Плата за договором',o=>{const l=o.lease?lzBy[o.lease]:null;return l?(l.rent_type==='paid'?fmt(l.rent_month,2)+' грн/міс з ПДВ':LT[l.rent_type]):NA}]];
+ if(!pub)rows.push(['Ознаки ризику',o=>pills([...o.flags,...o.auc_flags])||'—']);
+ $('#dOc').textContent='Порівняння об’єктів';$('#dTitle').textContent=os.length+' об’єкти поруч';$('#dFav').style.display='none';
+ $('#dBody').innerHTML='<div class="tbl"><table><thead><tr><th></th>'+os.map(o=>`<th>${esc(o.addr)}<div class="hint mono">${o.ocid}</div></th>`).join('')+'</tr></thead><tbody>'+rows.map(([h,f])=>`<tr><td class="hint">${h}</td>${os.map(o=>`<td>${f(o)}</td>`).join('')}</tr>`).join('')+'</tbody></table></div><p class="hint">Порівнюються лише наявні дані; орієнтовна плата — не оцінка і не пропозиція.</p>';$('#dlg').showModal();};
+/* ---------- chatbot (deterministic rules, no generative AI) ---------- */
+const DIST={'шевченків':'Шевченківський','київськ':'Київський','подільськ':'Подільський','полтавськ':'Полтавський'};
+const QUICK=['Контакти Управління майном','50–100 м² у Шевченківському районі','Які договори завершуються за 60 днів?','Де різниться площа?','Об’єкти без жодного аукціону','Як орендувати приміщення?','Що означає «Потребує уточнення»?'];
+function parseQ(raw){
+ const q=raw.toLowerCase().replace(/’/g,"'");const said=[],conds=[];let m;
+ if(/(як|хочу|подати|заяв).*(оренд|заяв)|заяв/.test(q)&&!/договор/.test(q))return {type:'howto'};
+ if(/(що означа|чому|поясни).*(уточн|розбіжн|статус)/.test(q))return {type:'explain'};
+ if(/договор/.test(q)&&/(заверш|закінч|спливає|минає|строк)/.test(q)){m=q.match(/(\d+)\s*(дн|день|дні)/);return {type:'contracts',d:m?+m[1]:60,expired:/минув|прострочен|закінчив/.test(q)}}
+ if(/площ/.test(q)&&/(різн|розбіж|не збіга)/.test(q))return {type:'area'};
+ m=q.match(/від\s*(\d+[.,]?\d*)\s*(?:до|-|–)\s*(\d+[.,]?\d*)/)||q.match(/(\d+[.,]?\d*)\s*[-–]\s*(\d+[.,]?\d*)\s*м/);
+ if(m){const a=+m[1].replace(',','.'),b=+m[2].replace(',','.');conds.push(o=>o.totalArea>=a&&o.totalArea<=b);said.push(`площа ${a}–${b} м²`)}
+ else{if((m=q.match(/(?:понад|більше|від|більш ніж)\s*(\d+)/))){const a=+m[1];conds.push(o=>o.totalArea>=a);said.push(`площа від ${a} м²`)}
+  if((m=q.match(/(?:до|менше|не більше)\s*(\d+)\s*м/))){const b=+m[1];conds.push(o=>o.totalArea<=b);said.push(`площа до ${b} м²`)}}
+ const st=[];if(/(доступн|вільн)/.test(q))st.push('available');if(/(уточн|розбіж)/.test(q))st.push('check');if(/(в оренді|орендован|здан)/.test(q))st.push('leased');if(/неактив/.test(q))st.push('inactive');
+ if(st.length){conds.push(o=>st.includes(UK(o)));said.push('статус: '+[...new Set(st.map(x=>US[x]))].join(', '))}
+ for(const k in DIST)if(q.includes(k)){const d=DIST[k];conds.push(o=>o.district===d);said.push('район: '+d)}
+ if(/без (жодного )?аукціон/.test(q)){conds.push(o=>!o.n_auc);said.push('без аукціонів')}
+ if(/(ризик|ознак)/.test(q)&&!document.body.classList.contains('public')){conds.push(o=>o.score>0);said.push('з ознаками ризику')}
+ if((m=q.match(/балансоутримувач\s+(.+)/))){const t=m[1].trim();conds.push(o=>(o.owner||'').toLowerCase().includes(t));said.push('балансоутримувач містить «'+t+'»')}
+ if((m=q.match(/(?:вул\.?|вулиц[яі]|адрес[аи]?)\s+([а-яіїєґ'\- ]{3,})/))){const t=m[1].trim().split(' ')[0];conds.push(o=>o.addr.toLowerCase().includes(t));said.push('адреса містить «'+t+'»')}
+ if(!conds.length)return {type:'unknown'};
+ return {type:'filter',conds,said};
+}
+const bm=()=>$('#bm');
+function say(html,who='b'){const d=document.createElement('div');d.className='msg '+who;d.innerHTML=html;bm().appendChild(d);bm().scrollTop=bm().scrollHeight;return d}
+function resList(items,label,onclick){return `<div class="res">${items.map((x,i)=>`<button type="button" data-i="${i}">${label(x)}</button>`).join('')}</div>`}
+function bindRes(d,items,onclick){d.querySelectorAll('.res button[data-i]').forEach(b=>b.onclick=()=>onclick(items[+b.dataset.i]))}
+function botAnswer(text){
+ say(esc(text),'u');
+ if(/контакт|телефон|подзвон|e-?mail|пошт|адрес[аиу]? управл|зв.яз|куди звернут|функці[їя] управл|положенн/i.test(text)){const pol=/функці|положенн/i.test(text);const d=say(pol?`Завдання, права й структуру Управління майном описує Положення (П-СУЯ/01). <button class="btn sm" type="button" data-go="func">Функції управління</button> <button class="btn sm ghost" type="button" data-go="pol">Положення</button>`:`<b>Управління майном комунальної власності міста</b><br>Начальник Управління — КУРНАКОВА Наталія Олександрівна<br>☎ <a href="tel:+380532561996">+380 (532) 56-19-96</a><br>✉ <a href="mailto:majnopmr@rada-poltava.gov.ua">majnopmr@rada-poltava.gov.ua</a><br>36000, м. Полтава, вул. Соборності, 36 · ЄДРПОУ 13967034<br><button class="btn sm" type="button" data-go="cont" style="margin-top:8px">Усі контакти</button>`);return}
+ const r=parseQ(text);const src=`<div class="hint" style="margin-top:6px">Джерела: Prozorro.Продажі (${S.fetched}), перелік договорів міста на 30.06.2026.</div>`;
+ if(r.type==='howto'){const d=say(`Оренда комунального майна відбувається через електронну систему Prozorro.Продажі:<br>1) знайдіть об’єкт на карті або в каталозі;<br>2) якщо він уже в переліку — беріть участь в аукціоні через авторизований майданчик;<br>3) якщо приміщення не в переліку — подайте заяву про включення його до переліку.<br><button class="btn sm" type="button" id="bApp" style="margin-top:8px">Підготувати заяву</button>`);d.querySelector('#bApp').onclick=()=>openApp();return}
+ if(r.type==='explain'){say(`«Потребує уточнення» означає, що джерела розходяться: у Prozorro об’єкт має статус «включено до переліку», але в переліку договорів міста є договір на цю адресу. Ми не називаємо такий об’єкт вільним, доки статус не підтвердить відповідальне джерело. Таких об’єктів — <b>${S.use.conflict+S.use.check}</b>.`);return}
+ if(r.type==='contracts'){const rows=LZ.filter(l=>{const d=daysLeft(l.term);return d!=null&&(r.expired?d<0:d>=0&&d<=r.d)}).sort((a,b)=>a.term>b.term?1:-1);
+  if(document.body.classList.contains('public')){say('Календар договорів доступний у режимі «Для Управління». Перемкніть режим угорі.');return}
+  const top=rows.slice(0,6);const d=say(`${r.expired?'Договорів зі строком, що вже минув':'Договорів, що закінчуються протягом '+r.d+' днів'}: <b>${rows.length}</b>.${top.length?' Найближчі:':''}${resList(top,l=>`${esc(l.address)} · до ${l.term} · ${esc(l.tenant_pub.slice(0,40))}`)}<button class="btn sm ghost" type="button" id="bCal" style="margin-top:8px">Відкрити календар</button>${src}`);
+  bindRes(d,top,l=>{if(l.objs.length)openCard(l.objs[0])});d.querySelector('#bCal').onclick=()=>{show('an');setCal(r.expired?-1:r.d);setTimeout(()=>$('#cal').scrollIntoView({behavior:'smooth',block:'center'}),150)};return}
+ if(r.type==='area'){const rows=OBJ.filter(o=>o.flags.includes('area_mismatch'));const top=rows.slice(0,6);const d=say(`Об’єктів, де площа в Prozorro і в переліку договорів міста різниться: <b>${rows.length}</b>.${resList(top,o=>`${esc(o.addr)} · ${fmt(o.totalArea,1)} vs ${fmt(o.area_city,1)} м²`)}<button class="btn sm ghost" type="button" id="bArea" style="margin-top:8px">Усі розбіжності</button>${src}`);
+  bindRes(d,top,o=>openCard(o.ocid));d.querySelector('#bArea').onclick=()=>{show('rec');setTimeout(()=>$('#area').scrollIntoView({behavior:'smooth',block:'center'}),150)};return}
+ if(r.type==='unknown'){say('Поки що я розумію запити про площу («від 50 до 100 м²»), статус («доступні», «в оренді», «потребують уточнення»), район, вулицю, «без аукціону», договори, що завершуються, і розбіжності площі. Спробуйте одну з підказок нижче.');return}
+ ASK=o=>r.conds.every(c=>c(o));const l=filtered();
+ const top=l.slice().sort((a,b)=>b.totalArea-a.totalArea).slice(0,6);
+ const d=say(`Зрозумів: ${r.said.join(' · ')}.<br>Знайдено <b>${l.length}</b> об’єктів (${fmt(l.reduce((a,o)=>a+o.totalArea,0),0)} м²).${l.length?resList(top,o=>`${esc(o.addr)} · ${fmt(o.totalArea,1)} м² · ${US[o.use]}`):' Нічого не знайшов — спробуйте ширший діапазон площі.'}<div class="row" style="margin-top:8px;gap:6px;flex-wrap:wrap"><button class="btn sm" type="button" id="bMap">Показати на карті</button><button class="btn sm ghost" type="button" id="bClr">Скинути</button></div>${src}`);
+ bindRes(d,top,o=>openCard(o.ocid));
+ d.querySelector('#bMap').onclick=()=>{show('map');const l2=filtered();drawMap(l2);catalog(l2);$('#map').scrollIntoView({behavior:'smooth',block:'center'})};
+ d.querySelector('#bClr').onclick=()=>{ASK=null;const l2=filtered();drawMap(l2);catalog(l2);say('Фільтр помічника скинуто.')};
+ const l3=filtered();drawMap(l3);catalog(l3);
+}
+function openBot(){$('#bot').classList.add('on');if(!bm().children.length){say(`Вітаю! Я помічник RentMap. Допоможу знайти комунальне приміщення, перевірити договори чи розбіжності в даних. Відповідаю лише за відкритими даними — нічого не вигадую.`)}setTimeout(()=>$('#botIn').focus(),100)}
+$('#botFab').onclick=()=>$('#bot').classList.contains('on')?$('#bot').classList.remove('on'):openBot();
+$('#botX').onclick=()=>$('#bot').classList.remove('on');
+$('#botQR').innerHTML=QUICK.map(q=>`<button type="button" class="chip">${q}</button>`).join('');
+document.querySelectorAll('#botQR .chip').forEach(c=>c.onclick=()=>botAnswer(c.textContent));
+$('#botF').onsubmit=e=>{e.preventDefault();const t=$('#botIn').value.trim();if(!t)return;$('#botIn').value='';botAnswer(t)};
+
+/* ---------- application for lease ---------- */
+const PURP=['Офіс / адміністративні приміщення','Торгівля непродовольчими товарами','Торгівля продовольчими товарами','Кафе, ресторан, заклад харчування','Побутові послуги (перукарня, ремонт тощо)','Медична практика / аптека','Освітні послуги, гуртки, спорт','Громадська організація / благодійність','Склад','Інше'];
+function openApp(oc){
+ const o=oc?byOc[oc]:null;
+ const grp=[['available','Доступні — договору немає в жодному джерелі'],['check','Потребують уточнення'],['leased','В оренді'],['inactive','Неактивні']];
+ $('#appBody').innerHTML=`<div class="steps"><div class="step"><b>1</b>Оберіть об’єкт на карті або в списку нижче</div><div class="step"><b>2</b>Заповніть дані заявника й мету використання</div><div class="step"><b>3</b>Сформуйте текст заяви й перевірте його</div><div class="step"><b>4</b>Подайте через авторизований майданчик Prozorro.Продажі або до Управління майном</div></div>
+ <div class="app">
+  <div class="full"><label for="aQ">Об’єкт — почніть вводити назву вулиці або номер будинку</label>
+   <div class="combo" id="aCombo"><span class="combo-ic" aria-hidden="true"><svg viewBox="0 0 24 24" width="18" height="18"><circle cx="11" cy="11" r="6.5" fill="none" stroke="currentColor" stroke-width="2"/><path d="M16 16l4 4" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></span>
+    <input id="aQ" type="text" role="combobox" aria-expanded="false" aria-controls="aList" aria-autocomplete="list" autocomplete="off" spellcheck="false" placeholder="Наприклад: Європ…, Мазепи 36, Пушкіна">
+    <button type="button" class="combo-x" id="aQx" aria-label="Очистити" hidden>✕</button>
+    <input type="hidden" id="aObj" value="">
+    <div class="combo-list" id="aList" role="listbox" hidden></div></div>
+   <div class="hint" id="aQhint" style="margin-top:6px">Спочатку показуємо доступні об’єкти, далі — ті, що потребують уточнення, в оренді й неактивні.</div></div>
+  <div class="full" id="aInfo"></div>
+  <label>Тип заяви<select id="aType"><option value="list">Про включення об’єкта до Переліку першого типу (оренда на аукціоні)</option><option value="auction">Про намір взяти участь в аукціоні з оренди</option></select></label>
+  <label>Заявник<select id="aWho"><option>Юридична особа</option><option>Фізична особа-підприємець</option><option>Громадська організація</option><option>Фізична особа</option></select></label>
+  <label>Найменування / ПІБ<input id="aName" type="text" autocomplete="off" placeholder="Як у ЄДР або паспорті"></label>
+  <label>Код ЄДРПОУ / РНОКПП<input id="aCode" type="text" inputmode="numeric" autocomplete="off" placeholder="8 або 10 цифр"></label>
+  <label>Телефон або e-mail для зв’язку<input id="aContact" type="text" autocomplete="off"></label>
+  <label>Бажаний строк оренди<select id="aTerm"><option>5 років</option><option>1 рік</option><option>2 роки</option><option>3 роки</option><option>10 років</option></select></label>
+  <label class="full">Мета використання<select id="aPurp">${PURP.map(p=>`<option>${p}</option>`).join('')}</select></label>
+  <label class="full">Додаткова інформація (за потреби)<textarea id="aNote" rows="2" placeholder="Наприклад, потрібна площа частини приміщення, режим роботи"></textarea></label>
+ </div>
+ <div class="consents">
+  <label class="chk"><input type="checkbox" id="aC1"><span>Даю згоду на обробку моїх персональних даних, зазначених у заяві, відповідно до Закону України «Про захист персональних даних», з метою розгляду заяви щодо оренди комунального майна.</span></label>
+  <label class="chk"><input type="checkbox" id="aC2"><span>Підтверджую, що відомості в заяві достовірні, і ознайомлений(-а) з порядком передачі майна в оренду через Prozorro.Продажі.</span></label>
+ </div>
+ <div class="row" style="margin-top:12px;gap:8px;flex-wrap:wrap"><button class="btn" id="aGo" type="button" disabled>Сформувати заяву</button><a class="btn ghost" href="https://prozorro.sale/" target="_blank" rel="noopener" style="text-decoration:none">Prozorro.Продажі ↗</a></div>
+ <div id="aOut" style="margin-top:12px"></div>
+ <p class="hint" style="margin-top:12px">Файл не надсилає і не зберігає ваші дані: текст формується лише у вашому браузері. Згоди потрібні для самої заяви: їх отримує Управління майном, коли ви подаєте заяву. Подання заяв на оренду комунального майна відбувається через авторизовані електронні майданчики системи Prozorro.Продажі (Закон України «Про оренду державного та комунального майна», Порядок передачі в оренду, постанова КМУ №483). Орендодавець — Управління майном комунальної власності міста, вул. Соборності, 36, ЄДРПОУ 13967034.</p>`;
+ const info=()=>{const x=byOc[$('#aObj').value];$('#aInfo').innerHTML=x?`<div class="ethic"><b>${esc(x.addr)}</b> · ${fmt(x.totalArea,1)} м² · <span class="pill ${x.use}">${US[x.use]}</span><br>${esc(USD[x.use])}. Балансоутримувач: ${esc(x.owner||'—')}. <a href="${PRO(x.ocid)}" target="_blank" rel="noopener">Сторінка в Prozorro ↗</a>${x.use==='leased'||x.use==='conflict'?'<br><b>Увага:</b> за даними джерел приміщення орендоване — заява може бути відхилена.':''}</div>`:''};
+ /* автодоповнення за вулицею / номером */
+ const ORD={available:0,check:1,leased:2,inactive:3},GT=Object.fromEntries(grp);
+ const nz=t=>String(t||'').toLowerCase().replace(/[’'ʼ`]/g,'').replace(/ё/g,'е').replace(/\s+/g,' ').trim();
+ const STOP=/^(м|м\.|полтава|вул|вул\.|вулиця|пров|пров\.|провулок|пл|пл\.|площа|просп|просп\.|проспект|с|с\.|смт|бульв|бульв\.|буд|буд\.|кв|прим|нп|приміщення)$/;
+ const IDX=OBJ.map(x=>{const words=nz(x.addr).replace(/[.,;()«»"]/g,' ').split(' ').filter(w=>w&&!STOP.test(w));return {x,words,full:nz(x.addr)}});
+ const hl=(addr,toks)=>{let h=esc(addr);toks.forEach(t=>{if(!t)return;const re=new RegExp('(^|[\\s.,(«"/-])('+t.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')+')','giu');h=h.replace(re,'$1<mark>$2</mark>')});return h};
+ let cur=-1,res=[];
+ const q=$('#aQ'),lst=$('#aList');
+ function search(){const toks=nz(q.value).replace(/[.,;()«»"]/g,' ').split(' ').filter(t=>t&&!STOP.test(t));$('#aQx').hidden=!q.value;
+  if(!toks.length){res=IDX.slice().sort((a,b)=>ORD[UK(a.x)]-ORD[UK(b.x)]||a.x.addr.localeCompare(b.x.addr,'uk')).slice(0,60)}
+  else res=IDX.filter(r=>toks.every(t=>r.words.some(w=>w.startsWith(t)))).sort((a,b)=>ORD[UK(a.x)]-ORD[UK(b.x)]||a.x.addr.localeCompare(b.x.addr,'uk'));
+  const total=res.length;res=res.slice(0,80);cur=res.length?0:-1;
+  let g='',html='';res.forEach((r,i)=>{const k=UK(r.x);if(k!==g){g=k;html+=`<div class="combo-g">${GT[k]}</div>`}
+   html+=`<div class="combo-o${i===cur?' on':''}" role="option" id="aO${i}" data-i="${i}" aria-selected="${i===cur}"><span class="mpin">${pinSVG(k)}</span><span class="t">${hl(r.x.addr,toks)}</span><span class="a">${fmt(r.x.totalArea,1)} м²</span></div>`});
+  lst.innerHTML=html||'<div class="combo-empty">Нічого не знайдено. Перевірте написання вулиці або введіть лише її початок.</div>';
+  if(total>res.length)lst.innerHTML+=`<div class="combo-empty">Показано ${res.length} з ${total} — уточніть номер будинку.</div>`;
+  lst.hidden=false;q.setAttribute('aria-expanded','true');q.setAttribute('aria-activedescendant',cur>=0?'aO'+cur:'');
+  lst.querySelectorAll('.combo-o').forEach(el=>{el.onmousedown=e=>{e.preventDefault();pick(+el.dataset.i)};el.onmouseenter=()=>mv(+el.dataset.i,false)});}
+ function mv(i,scroll=true){const els=lst.querySelectorAll('.combo-o');if(!els.length)return;cur=(i+els.length)%els.length;els.forEach((e,j)=>{e.classList.toggle('on',j===cur);e.setAttribute('aria-selected',j===cur)});q.setAttribute('aria-activedescendant','aO'+cur);if(scroll)els[cur].scrollIntoView({block:'nearest'})}
+ function close(){lst.hidden=true;q.setAttribute('aria-expanded','false')}
+ function pick(i){const r=res[i];if(!r)return;$('#aObj').value=r.x.ocid;q.value=r.x.addr+' · '+fmt(r.x.totalArea,1)+' м²';$('#aQx').hidden=false;close();info()}
+ q.addEventListener('input',()=>{$('#aObj').value='';info();search()});
+ q.addEventListener('focus',()=>{if(!$('#aObj').value)search()});
+ q.addEventListener('blur',()=>setTimeout(close,120));
+ q.addEventListener('keydown',e=>{if(lst.hidden&&(e.key==='ArrowDown'||e.key==='ArrowUp')){search();e.preventDefault();return}
+  if(e.key==='ArrowDown'){mv(cur+1);e.preventDefault()}else if(e.key==='ArrowUp'){mv(cur-1);e.preventDefault()}
+  else if(e.key==='Enter'){if(!lst.hidden&&cur>=0){pick(cur);e.preventDefault()}}else if(e.key==='Escape'){close()}});
+ $('#aQx').onclick=()=>{q.value='';$('#aObj').value='';info();q.focus();search()};
+ if(o){$('#aObj').value=o.ocid;q.value=o.addr+' · '+fmt(o.totalArea,1)+' м²';$('#aQx').hidden=false}
+ info();
+ const okC=()=>{$('#aGo').disabled=!($('#aC1').checked&&$('#aC2').checked)};$('#aC1').onchange=okC;$('#aC2').onchange=okC;
+ $('#aGo').onclick=()=>{const x=byOc[$('#aObj').value];if(!x){$('#aOut').innerHTML='<div class="note">Оберіть об’єкт: почніть вводити назву вулиці й виберіть рядок зі списку.</div>';q.focus();return}
+  if(!($('#aC1').checked&&$('#aC2').checked)){$('#aOut').innerHTML='<div class="note">Щоб сформувати заяву, позначте обидві згоди.</div>';return}
+  const t=$('#aType').value==='list'?'ЗАЯВА\nпро включення об’єкта комунальної власності до Переліку першого типу':'ЗАЯВА\nпро намір взяти участь в аукціоні з передачі в оренду об’єкта комунальної власності';
+  const txt=`Управлінню майном комунальної власності міста\n(Полтавська міська рада, вул. Соборності, 36, м. Полтава)\n\nЗаявник: ${$('#aName').value||'_______________'} (${$('#aWho').value})\nКод ЄДРПОУ / РНОКПП: ${$('#aCode').value||'__________'}\nКонтакт: ${$('#aContact').value||'__________'}\n\n${t}\n\nПрошу ${$('#aType').value==='list'?'включити до Переліку першого типу та передати в оренду на аукціоні':'допустити до участі в аукціоні з передачі в оренду'} об’єкт:\n— адреса: ${x.addr}\n— площа: ${fmt(x.totalArea,1)} м²\n— ідентифікатор у Prozorro.Продажі: ${x.ocid}\n— балансоутримувач: ${x.owner||'—'}\n\nМета використання: ${$('#aPurp').value}\nБажаний строк оренди: ${$('#aTerm').value}\n${$('#aNote').value.trim()?'Додатково: '+$('#aNote').value.trim()+'\n':''}\nДаю згоду на обробку моїх персональних даних відповідно до Закону України «Про захист персональних даних» з метою розгляду цієї заяви. Підтверджую достовірність наведених відомостей.\n\nДата: ${new Date().toLocaleDateString('uk-UA')}\nПідпис: ______________`;
+  $('#aOut').innerHTML=`<textarea readonly rows="16" style="width:100%;font:13px 'e-Ukraine',sans-serif;padding:12px;border:1.5px solid var(--line);border-radius:14px">${esc(txt)}</textarea><div class="row" style="gap:8px;margin-top:8px"><button class="btn" id="aCopy" type="button">Копіювати текст</button><button class="btn ghost" id="aPrint" type="button">Друкувати</button></div>`;
+  $('#aCopy').onclick=()=>{navigator.clipboard&&navigator.clipboard.writeText(txt).then(()=>$('#aCopy').textContent='Скопійовано ✓').catch(()=>$('#aCopy').textContent='Виділіть текст і скопіюйте')};
+  $('#aPrint').onclick=()=>{const w=window.open('','_blank');if(!w)return;w.document.write('<pre style="font:14px/1.6 serif;white-space:pre-wrap;padding:40px">'+esc(txt)+'</pre>');w.document.close();w.print()};};
+ if(!$('#appDlg').open)$('#appDlg').showModal();
+}
+$('#appClose').onclick=()=>$('#appDlg').close();
+$('#dlg').addEventListener('close',()=>setActive(null));
+['#appTop','#actApp'].forEach(id=>$(id).onclick=()=>openApp());
+$('#actFind').onclick=()=>{show('map');$('#map').scrollIntoView({behavior:'smooth',block:'start'});setTimeout(()=>$('#fq').focus(),400)};
+$('#actBot').onclick=()=>openBot();
+
+
+/* ---------- Функції управління (Положення, розділ 2) ---------- */
+const FUNC=[
+ {t:'Оренда нежитлового майна',ic:'<svg viewBox="0 0 24 24" fill="none" stroke="#000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="8" cy="15" r="4"/><path d="m11 12 9-9M17 6l3 3M15 8l2 2"/></svg>',items:[[1,'Формує й оновлює перелік нежитлових об’єктів комунальної власності громади','rec'],[7,'Передає в оренду об’єкти комунальної власності','map'],[25,'Представляє громаду на зборах співвласників будинків, де є комунальні нежитлові приміщення; може делегувати права орендарям']]},
+ {t:'Приватизація й відчуження',ic:'<svg viewBox="0 0 24 24" fill="none" stroke="#000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 8h14l-3-3M20 16H6l3 3"/></svg>',items:[[9,'Готує для депутатських комісій переліки об’єктів, що підлягають приватизації'],[10,'Приватизує й відчужує комунальні об’єкти за законом'],[6,'Розглядає переважне право громади купити частку в спільному майні'],[11,'Укладає договори про відшкодування вартості комунальних об’єктів, що підлягають знесенню'],[27,'Вирішує питання спільної часткової власності: припинення, виділення частки в окремий об’єкт']]},
+ {t:'Реєстрація й облік майна',ic:'<svg viewBox="0 0 24 24" fill="none" stroke="#000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="3" width="16" height="18" rx="2"/><path d="M8 8h8M8 12h8M8 16h5"/></svg>',items:[[5,'Реєструє право комунальної власності на нерухомість'],[13,'Набуває право власності громади на безхазяйне нерухоме майно'],[4,'Звертається до суду, щоб визнати спадщину відумерлою й передати її громаді'],[12,'Замовляє проєкти землеустрою під комунальними об’єктами'],[28,'Укладає охоронні договори й замовляє облікову документацію на пам’ятки культурної спадщини'],[29,'Веде бухгалтерський і податковий облік, зокрема облік об’єктів нерухомості громади','an']]},
+ {t:'Житлові питання',ic:'<svg viewBox="0 0 24 24" fill="none" stroke="#000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11 12 4l9 7"/><path d="M5 10v10h14V10M10 20v-6h4v6"/></svg>',items:[[16,'Формує перелік житлового фонду громади'],[17,'Веде облік громадян, які потребують поліпшення житлових умов'],[18,'Готує пропозиції щодо розподілу житла'],[19,'Веде облік громадян, які потребують житла для тимчасового проживання'],[20,'Готує пропозиції щодо житла для внутрішньо переміщених осіб'],[21,'Оформлює ордери на заселення й договори найму комунального житла'],[22,'Приватизує квартири, будинки, кімнати й жилі приміщення в гуртожитках'],[23,'Видає дублікати свідоцтв про право власності на приватизоване житло'],[24,'Виправляє технічні помилки у свідоцтвах про право власності на житло']]},
+ {t:'Правова робота й рішення',ic:'<svg viewBox="0 0 24 24" fill="none" stroke="#000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v18M5 7l-3 6a3 3 0 0 0 6 0zM19 7l-3 6a3 3 0 0 0 6 0zM5 7h14M8 21h8"/></svg>',items:[[2,'Представляє й захищає інтереси управління в судах'],[3,'Подає позови в межах повноважень'],[8,'Розробляє проєкти нормативно-правових актів'],[15,'Готує проєкти рішень з майнових питань і виконує їх'],[14,'Погоджує контракти з керівниками комунальних підприємств'],[26,'Реалізує права міської ради як засновника господарських товариств'],[30,'Виконує інші доручення міського голови щодо комунального майна']]},
+ {t:'Відкритість і звернення',ic:'<svg viewBox="0 0 24 24" fill="none" stroke="#000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></svg>',items:[[33,'Відповідає на звернення громадян і бізнесу та на запити на інформацію','bot'],[34,'Оприлюднює публічну інформацію, створену під час роботи','map'],[35,'Бере участь у запобіганні й виявленні корупційних правопорушень','risk'],[37,'Сприяє громадському контролю за доступом до публічної інформації','rec'],[32,'Непублічну інформацію надає лише з письмового дозволу міського голови'],[36,'Надає безоплатну первинну правову допомогу']]},
+ {t:'Діловодство',ic:'<svg viewBox="0 0 24 24" fill="none" stroke="#000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7h16M4 7l1 13h14l1-13M9 4h6l1 3H8z"/><path d="M10 12h4"/></svg>',items:[[31,'Веде діловодство й архів справ'],[38,'Вносить зміни щодо видів діяльності до ЄДР за наказом начальника']]}];
+const FGO={map:'Карта і каталог',rec:'Звірка джерел',an:'Аналітика',risk:'Ознаки ризику',bot:'Помічник'};
+$('#fgrid').innerHTML=FUNC.map(g=>`<div class="fcard"><div class="fh"><span class="fi" aria-hidden="true">${g.ic}</span><div><b>${g.t}</b><span>${g.items.length} ${g.items.length<5?'завдання':'завдань'}</span></div></div><ul>${g.items.map(([n,t,go])=>`<li><span class="pn">п.${n}</span><span>${t}${go?` <button type="button" class="tag-rm${go==='risk'?' internal-only':''}" data-go="${go}" title="Відкрити: ${FGO[go]}">RentMap · ${FGO[go]}</button>`:''}</span></li>`).join('')}</ul></div>`).join('');
+const IND=[['3.1','Надходження до бюджету розвитку від приватизації — у % до плану'],['3.2','Надходження до бюджету від оренди комунальних об’єктів — у % до плану','an'],['3.3','Частка повторних звернень з того самого питання','bot'],['3.4','Частка скарг мешканців на роботу управління'],['3.5','Скільки громадян взято на квартирний облік відносно поданих заяв'],['3.6','Скільки підготовлено рішень про приватизацію житла відносно поданих заяв']];
+['#indList','#indList2'].forEach(id=>$(id).innerHTML=IND.map(([n,t,go])=>`<li><span class="pn">${n}</span><span>${t}${go?` <button type="button" class="tag-rm" data-go="${go}">RentMap · ${FGO[go]}</button>`:''}</span></li>`).join(''));
+document.addEventListener('click',e=>{const g=e.target.closest('[data-go]');if(g){e.preventDefault();const t=g.dataset.go;if(t==='bot'){openBot();return}show(t);return}
+ const a=e.target.closest('[data-act]');if(a){if(a.dataset.act==='app')openApp();else{show('map');$('#map').scrollIntoView({behavior:'smooth'})}}});
+$('#cCopy').onclick=()=>{const t='Управління майном комунальної власності міста (Полтавська міська рада)\nНачальник Управління: КУРНАКОВА Наталія Олександрівна\nТелефон: +380 (532) 56-19-96\nЕ-пошта: majnopmr@rada-poltava.gov.ua\nАдреса: 36000, м. Полтава, вул. Соборності, 36\nКод ЄДРПОУ: 13967034';navigator.clipboard&&navigator.clipboard.writeText(t).then(()=>$('#cCopy').textContent='Скопійовано ✓').catch(()=>{})};
+/* contracts calendar */
+let CALD=60;const TODAY=new Date(S.fetched.slice(0,10));
+const daysLeft=t=>t?Math.round((new Date(t)-TODAY)/864e5):null;
+function setCal(d){CALD=d;document.querySelectorAll('#calSeg button').forEach(b=>b.classList.toggle('on',+b.dataset.d===d));calendar()}
+document.querySelectorAll('#calSeg button').forEach(b=>b.onclick=()=>setCal(+b.dataset.d));
+function calRows(){return LZ.filter(l=>{const d=daysLeft(l.term);return d!=null&&(CALD<0?d<0:d>=0&&d<=CALD)}).sort((a,b)=>(a.term>b.term?1:-1))}
+function calendar(){const rows=calRows();$('#calInfo').textContent=CALD<0?`${rows.length} договорів зі строком, що вже минув (станом на ${S.fetched.slice(0,10)}). Частина продовжена на час воєнного стану (примітка ** у переліку).`:`${rows.length} договорів закінчуються протягом ${CALD} днів від ${S.fetched.slice(0,10)}.`;
+ table($('#cal'),[{h:'№',n:1,v:l=>l.n},{h:'Адреса',v:l=>l.address},{h:'Орендар',v:l=>l.tenant_pub},{h:'Площа',n:1,v:l=>l.area,f:l=>fmt(l.area,1)},{h:'Строк до',v:l=>l.term},{h:'Днів',n:1,v:l=>daysLeft(l.term)},{h:'Плата',n:1,v:l=>l.rent_month||0,f:l=>l.rent_type==='paid'?fmt(l.rent_month,2):LT[l.rent_type]},{h:'PDF',n:1,v:l=>l.page,f:l=>'стор. '+l.page}],rows,l=>{if(l.objs.length)openCard(l.objs[0])});}
+$('#calCsv').onclick=()=>csv('rentmap_contracts_calendar.csv',['№','адреса','орендар','площа','строк','днів','плата','стор_PDF'],calRows().map(l=>[l.n,l.address,l.tenant_pub,l.area,l.term,daysLeft(l.term),l.rent_type==='paid'?l.rent_month:LT[l.rent_type],l.page]));
+/* area mismatch */
+function areaTbl(){const rows=OBJ.filter(o=>o.flags.includes('area_mismatch'));
+ table($('#area'),[{h:'Адреса',v:o=>o.addr,f:o=>`<b>${esc(o.addr)}</b><div class="hint mono">${o.ocid}</div>`},{h:'Prozorro, м²',n:1,v:o=>o.totalArea,f:o=>o.totalArea?fmt(o.totalArea,1):'<span class="pill flag">0</span>'},{h:'Перелік міста, м²',n:1,v:o=>o.area_city,f:o=>fmt(o.area_city,1)},{h:'Різниця',n:1,v:o=>Math.abs((o.area_city||0)-(o.totalArea||0)),f:o=>fmt((o.area_city||0)-(o.totalArea||0),1)},{h:'Рядок переліку',n:1,v:o=>o.lease,f:o=>'№'+o.lease+' · стор. '+(lzBy[o.lease]||{}).page}],rows,o=>openCard(o.ocid));}
+
+/* ---------- калькулятор доходу громади: оренда чи приватизація ---------- */
+const OBW=n=>{const d=n%10,h=n%100;return n+' '+(d===1&&h!==11?'об’єкт':d>=2&&d<=4&&(h<12||h>14)?'об’єкти':'об’єктів')};
+document.addEventListener('click',e=>{const b=e.target.closest('[data-card]');if(b){e.preventDefault();openCard(b.dataset.card)}});
+const PS=((DATA.privsales||{}).rows||[]).map(r=>({id:r[0],date:r[1],addr:r[2],area:+r[3],start:+r[4],final:+r[5],bids:r[6],method:r[7],district:r[8]||'',lat:r[9],lng:r[10],vil:(r[8]||'')==='Полтавський'||/^с\./.test(r[2])})).filter(r=>r.area>0&&r.final>0).map(r=>(r.pm=r.final/r.area,r));
+const isVil=o=>o.district==='Полтавський'||/(^|[\s,])с\.\s?[А-ЯІЇЄҐ]/.test(o.addr||'');
+const KM=(a,b,c,d)=>{const r=Math.PI/180,x=(d-b)*r*Math.cos((a+c)/2*r),y=(c-a)*r;return 6371*Math.hypot(x,y)};
+const pctl=(a,p)=>{const v=a.slice().sort((x,y)=>x-y);if(!v.length)return 0;const i=(v.length-1)*p,lo=Math.floor(i),hi=Math.ceil(i);return v[lo]+(v[hi]-v[lo])*(i-lo)};
+const AUCL=id=>'https://prozorro.sale/auction/'+encodeURIComponent(id);
+const INC={o:null,cRate:null,rs:'analog'};
+const grn=v=>fmt(Math.round(v),0)+' грн';
+const mis=n=>{const d=n%10,h=n%100;return n+' '+(d===1&&h!==11?'місяць':d>=2&&d<=4&&(h<12||h>14)?'місяці':'місяців')};
+const yrs=n=>{const d=n%10,h=n%100;return n+' '+(d===1&&h!==11?'рік':d>=2&&d<=4&&(h<12||h>14)?'роки':'років')};
+function incGroup(){const d=$('#iLoc').value,vil=d==='Полтавський';const g=PS.filter(r=>r.district===d);if(g.length>=3)return g;const t=PS.filter(r=>r.vil===vil);return t.length>=3?t:PS}
+const incByGeo=()=>INC.o&&INC.o.lat&&Math.abs((+$('#iA').value||0)-INC.o.totalArea)<.05;
+/* «найближчі»: для вибраного об’єкта — за відстанню й площею (1,5 км ≈ відмінність площі в e разів), інакше — за площею в межах району */
+function incNear(a){if(incByGeo()){const o=INC.o,vil=isVil(o);const pool=PS.filter(r=>r.vil===vil&&r.lat);const sc=r=>KM(o.lat,o.lng,r.lat,r.lng)/1.5+Math.abs(Math.log(r.area/a));if(pool.length>=3)return pool.slice().sort((x,y)=>sc(x)-sc(y)).slice(0,5)}
+ return incGroup().slice().sort((x,y)=>Math.abs(Math.log(x.area/a))-Math.abs(Math.log(y.area/a))).slice(0,5)}
+function incPrice(){const a=+$('#iA').value||0,m=$('#iPm').value;if(!a||!PS.length)return 0;
+ if(m==='near')return a*pctl(incNear(a).map(r=>r.pm),.5);if(m==='q25')return a*pctl(incGroup().map(r=>r.pm),.25);if(m==='q75')return a*pctl(incGroup().map(r=>r.pm),.75);return +$('#iP').value||0}
+function incRate(){const a=+$('#iA').value||0;if(INC.rs==='contract'&&INC.cRate)return INC.cRate;if(INC.rs==='own')return +$('#iR').value||0;return INC.o&&Math.abs(INC.o.totalArea-a)<.05?INC.o.analog:analogFor(a)}
+function incSetRs(s){INC.rs=s;document.querySelectorAll('#iRs button').forEach(b=>b.classList.toggle('on',b.dataset.s===s));if(s!=='own')$('#iR').value=(+incRate()).toFixed(2)}
+function incPick(o){INC.o=o;const l=o.lease?lzBy[o.lease]:null;$('#iA').value=o.totalArea||'';if(o.district)$('#iLoc').value=o.district;else if(isVil(o))$('#iLoc').value='Полтавський';
+ INC.cRate=l&&l.rent_type==='paid'&&l.rent_month>0?l.rent_month/1.2/(l.area||o.totalArea||1):null;
+ $('#iRs button[data-s="contract"]').disabled=!INC.cRate;incSetRs(INC.cRate?'contract':'analog');
+ $('#iInfo').innerHTML=`<span class="pill ${o.use}">${US[o.use]}</span> ${l?(l.rent_type==='paid'?`договір у переліку міста: ${fmt(l.rent_month,2)} грн/міс з ПДВ (≈ ${fmt(INC.cRate,2)} грн/м² без ПДВ)`:`договір у переліку міста: ${LT[l.rent_type]}`):'договору в переліку міста немає'}${o.use==='leased'||o.use==='conflict'?' · об’єкт зараз в оренді — це впливає на можливість і умови продажу':''} · <button type="button" class="linkbtn" data-card="${o.ocid}">картка об’єкта</button>`;
+ if($('#iPm').value==='own')$('#iPm').value='near';incCalc()}
+function incClear(){INC.o=null;INC.cRate=null;$('#iRs button[data-s="contract"]').disabled=true;$('#iInfo').textContent='';incSetRs('analog');incCalc()}
+function incCalc(){
+ const a=+$('#iA').value||0,H=+$('#iH').value||10,vac=Math.min(12,Math.max(0,+$('#iV').value||0)),sh=Math.min(100,Math.max(0,+$('#iB').value))/100,ix=(+$('#iI').value||0)/100,tax=+$('#iT').value||0;
+ $('#iHv').textContent=H;document.querySelectorAll('.iHy').forEach(e=>e.textContent=H);
+ if(INC.rs!=='own')$('#iR').value=a?(+incRate()).toFixed(2):'';
+ const rate=+$('#iR').value||0;const pm=$('#iPm').value;if(pm!=='own')$('#iP').value=a?Math.round(incPrice()):'';const price=+$('#iP').value||0;
+ const mo=a*rate*sh,yr=mo*(12-vac);const cumR=[0],cumP=[price];for(let y=1;y<=Math.max(H,1);y++){cumR.push(cumR[y-1]+yr*Math.pow(1+ix,y-1));cumP.push(price+tax*y)}
+ $('#oRm').textContent=a?grn(mo):'—';$('#oRy').textContent=a?grn(yr):'—';$('#oRh').textContent=a?grn(cumR[H]):'—';
+ $('#oPs').textContent=price?grn(price):'—';$('#oPm').textContent=price&&a?grn(price/a):'—';$('#oPh').textContent=price?grn(cumP[H]):'—';
+ /* точка беззбитковості: коли сума оренди наздоганяє ціну продажу (+ податки) */
+ let be=null;if(yr>tax&&price>0){let cr=0;for(let m=1;m<=1200;m++){const y=Math.ceil(m/12);cr+=yr/12*Math.pow(1+ix,y-1);if(cr>=price+tax*m/12){be=m;break}}}
+ const diff=cumR[H]-cumP[H];
+ $('#iVerdict').innerHTML=!a||!price?'<span class="hint">Оберіть об’єкт або задайте площу.</span>':
+  `<div class="v-main">${diff>=0?`За ${yrs(H)} <b>оренда</b> дасть громаді більше — на <b>${grn(diff)}</b>`:`За ${yrs(H)} <b>приватизація</b> дасть громаді більше — на <b>${grn(-diff)}</b>`}</div>
+   <div class="v-sub">${be?`Сума орендної плати зрівняється з ціною продажу${tax?' (разом з податками)':''} приблизно через <b>${be>=24?yrs(Math.round(be/12)):mis(be)}</b>. Ціна продажу дорівнює орендній платі приблизно за <b>${mis(Math.round(price/Math.max(mo,1)))}</b>.`:'Оренда з такими параметрами не наздоганяє ціну продажу.'} Після продажу майно назавжди виходить з власності громади, а орендне — лишається і може здаватися далі.</div>`;
+ incChart(cumR,cumP,H,be);incAnalogs(a);}
+function incChart(R,P,H,be){const el=$('#iChart');if(!(+$('#iA').value)||!P[0]){el.innerHTML='';$('#iHover').textContent='';return}
+ const W=1100,Hh=250,pl=70,pr=230,pt=16,pb=30,mx=Math.max(...R,...P)*1.05||1;const X=y=>pl+(W-pl-pr)*y/H,Y=v=>pt+(Hh-pt-pb)*(1-v/mx);
+ const line=a=>a.map((v,i)=>(i?'L':'M')+X(i).toFixed(1)+' '+Y(v).toFixed(1)).join(' ');
+ const ticks=[0,.25,.5,.75,1].map(t=>t*mx/1.05);const fk=v=>v>=1e6?(v/1e6).toFixed(v>=1e7?0:1).replace('.',',')+' млн':v>=1e3?Math.round(v/1e3)+' тис.':Math.round(v);
+ const xs=[];const st=H<=10?1:H<=20?2:5;for(let y=0;y<=H;y+=st)xs.push(y);
+ let beM='';if(be&&be/12<=H){const by=be/12,bv=P[0]+(+$('#iT').value||0)*by;beM=`<line x1="${X(by)}" x2="${X(by)}" y1="${pt}" y2="${Hh-pb}" stroke="var(--ink2)" stroke-dasharray="3 4" stroke-width="1"/><circle cx="${X(by)}" cy="${Y(bv)}" r="5" fill="#fff" stroke="var(--ink)" stroke-width="2"/><text x="${X(by)+7}" y="${pt+10}" class="ct">зрівнюються</text>`}
+ el.innerHTML=`<svg viewBox="0 0 ${W} ${Hh}" role="img" aria-label="Накопичені надходження громади за роками: оренда і приватизація">
+  ${ticks.map(t=>`<line x1="${pl}" x2="${W-pr}" y1="${Y(t)}" y2="${Y(t)}" stroke="var(--line)"/><text x="${pl-8}" y="${Y(t)+4}" text-anchor="end" class="ct">${fk(t)}</text>`).join('')}
+  ${xs.map(y=>`<text x="${X(y)}" y="${Hh-8}" text-anchor="middle" class="ct">${y}</text>`).join('')}<text x="${W-pr+18}" y="${Hh-8}" class="ct">рік</text>
+  <path d="${line(P)}" fill="none" stroke="var(--ink)" stroke-width="2"/><path d="${line(R)}" fill="none" stroke="#1D8C84" stroke-width="2.5"/>
+  ${beM}
+  <text x="${X(H)+8}" y="${Y(R[H])+4}" class="cl" fill="#14706A">Оренда · ${fk(R[H])}</text><text x="${X(H)+8}" y="${Y(P[H])+(Math.abs(Y(P[H])-Y(R[H]))<16?(Y(P[H])>Y(R[H])?16:-8):4)}" class="cl">Приватизація · ${fk(P[H])}</text>
+  <line id="iCross" x1="0" x2="0" y1="${pt}" y2="${Hh-pb}" stroke="var(--ink2)" stroke-width="1" opacity="0"/>
+  <rect x="${pl}" y="${pt}" width="${W-pl-pr}" height="${Hh-pt-pb}" fill="transparent" id="iHit"/></svg>`;
+ const svg=el.querySelector('svg'),cr=el.querySelector('#iCross'),hv=$('#iHover');const base=`Рік ${H}: оренда ${grn(R[H])} · приватизація ${grn(P[H])}`;hv.textContent=base;
+ el.querySelector('#iHit').addEventListener('mousemove',e=>{const b=svg.getBoundingClientRect();const x=(e.clientX-b.left)*W/b.width;const y=Math.max(0,Math.min(H,Math.round((x-pl)/(W-pl-pr)*H)));cr.setAttribute('x1',X(y));cr.setAttribute('x2',X(y));cr.setAttribute('opacity',.6);hv.textContent=`Рік ${y}: оренда ${grn(R[y])} · приватизація ${grn(P[y])}`});
+ el.querySelector('#iHit').addEventListener('mouseleave',()=>{cr.setAttribute('opacity',0);hv.textContent=base});}
+function incAnalogs(a){if(!PS.length){$('#iAnInfo').textContent='Даних про продажі немає.';$('#iAn').innerHTML='';return}
+ const g=incGroup(),near=a?incNear(a):[];const geo=incByGeo();const dn=$('#iLoc').selectedOptions[0].textContent;
+ $('#iAnInfo').innerHTML=`У 2024–2026 роках Управління продало на Prozorro ${OBW(PS.length)} на ${fmt(Math.round(PS.reduce((s,r)=>s+r.final,0)/1e5)/10,1)} млн грн без ПДВ; у ${PS.filter(r=>r.bids<=1).length} аукціонах був лише один учасник. Ціна за м² ${g===PS?'(усі продажі)':g.every(r=>r.district===$('#iLoc').value)?'— '+dn:g[0]&&g[0].vil?'в селах громади':'в місті'}: нижня чверть ${grn(pctl(g.map(r=>r.pm),.25))}, медіана ${grn(pctl(g.map(r=>r.pm),.5))}, верхня чверть ${grn(pctl(g.map(r=>r.pm),.75))}. Позначені ★ — 5 продажів, ${geo?'найближчих до об’єкта за відстанню й площею':'найближчих за площею в цьому районі'}; медіана їхньої ціни за м² — орієнтир «найближчі». Ціна дуже залежить від місця: центр і околиці відрізняються в рази.`;
+ const dist=r=>geo&&r.lat?KM(INC.o.lat,INC.o.lng,r.lat,r.lng):null;
+ const ids=new Set(near.map(r=>r.id));const rows=[...near,...(geo?[]:g.filter(r=>!ids.has(r.id)).sort((x,y)=>x.date<y.date?1:-1)),...(geo?PS.filter(r=>!ids.has(r.id)).sort((x,y)=>dist(x)-dist(y)):[])];
+ $('#iAn').innerHTML=`<thead><tr><th>Адреса</th><th>Аукціон</th><th class="n">Площа, м²</th><th class="n">Стартова, грн</th><th class="n">Продано за, грн</th><th class="n">грн/м²</th><th class="n">Учасників</th>${geo?'<th class="n">Від об’єкта, км</th>':''}</tr></thead><tbody>${rows.map(r=>`<tr class="${ids.has(r.id)?'near':''}"><td>${ids.has(r.id)?'★ ':''}${esc(r.addr)}</td><td><a href="${AUCL(r.id)}" target="_blank" rel="noopener" class="mono">${r.date}</a></td><td class="n">${fmt(r.area,1)}</td><td class="n">${fmt(Math.round(r.start),0)}</td><td class="n">${fmt(Math.round(r.final),0)}</td><td class="n">${fmt(Math.round(r.pm),0)}</td><td class="n">${r.bids}</td>${geo?`<td class="n">${dist(r)!=null?fmt(dist(r),1):'—'}</td>`:''}</tr>`).join('')}</tbody>`;}
+(function(){/* пошук об’єкта з підказками — як у заяві на оренду */
+ const nz=t=>String(t||'').toLowerCase().replace(/[’'ʼ`]/g,'').replace(/\s+/g,' ').trim();
+ const STOP=/^(м|м\.|полтава|вул|вул\.|вулиця|пров|пров\.|провулок|пл|пл\.|площа|просп|просп\.|проспект|с|с\.|смт|бульв|бульв\.|буд|буд\.|прим|приміщення)$/;
+ const IDX=OBJ.map(x=>({x,w:nz(x.addr).replace(/[.,;()«»"]/g,' ').split(' ').filter(w=>w&&!STOP.test(w))}));
+ const q=$('#iQ'),lst=$('#iList');let res=[],cur=-1;
+ function search(){const toks=nz(q.value).replace(/[.,;()«»"]/g,' ').split(' ').filter(t=>t&&!STOP.test(t));$('#iQx').hidden=!q.value;
+  res=(toks.length?IDX.filter(r=>toks.every(t=>r.w.some(w=>w.startsWith(t)))):IDX.slice()).sort((a,b)=>a.x.addr.localeCompare(b.x.addr,'uk')).slice(0,60);cur=res.length?0:-1;
+  lst.innerHTML=res.map((r,i)=>`<div class="combo-o${i===cur?' on':''}" role="option" id="iO${i}" data-i="${i}"><span class="mpin">${pinSVG(UK(r.x))}</span><span class="t">${esc(r.x.addr)}</span><span class="a">${fmt(r.x.totalArea,1)} м²</span></div>`).join('')||'<div class="combo-empty">Нічого не знайдено.</div>';
+  lst.hidden=false;q.setAttribute('aria-expanded','true');lst.querySelectorAll('.combo-o').forEach(el=>{el.onmousedown=e=>{e.preventDefault();pick(+el.dataset.i)};el.onmouseenter=()=>mv(+el.dataset.i)})}
+ function mv(i){const els=lst.querySelectorAll('.combo-o');if(!els.length)return;cur=(i+els.length)%els.length;els.forEach((e,j)=>e.classList.toggle('on',j===cur));q.setAttribute('aria-activedescendant','iO'+cur);els[cur].scrollIntoView({block:'nearest'})}
+ function close(){lst.hidden=true;q.setAttribute('aria-expanded','false')}
+ function pick(i){const r=res[i];if(!r)return;q.value=r.x.addr;$('#iQx').hidden=false;close();incPick(r.x)}
+ q.addEventListener('input',search);q.addEventListener('focus',()=>{if(!INC.o)search()});q.addEventListener('blur',()=>setTimeout(close,120));
+ q.addEventListener('keydown',e=>{if(e.key==='ArrowDown'){lst.hidden?search():mv(cur+1);e.preventDefault()}else if(e.key==='ArrowUp'){mv(cur-1);e.preventDefault()}else if(e.key==='Enter'&&!lst.hidden&&cur>=0){pick(cur);e.preventDefault()}else if(e.key==='Escape')close()});
+ $('#iQx').onclick=()=>{q.value='';$('#iQx').hidden=true;incClear();q.focus();search()};
+ document.querySelectorAll('#iRs button').forEach(b=>b.onclick=()=>{incSetRs(b.dataset.s);incCalc()});
+ $('#iR').addEventListener('input',()=>{INC.rs='own';document.querySelectorAll('#iRs button').forEach(b=>b.classList.remove('on'));incCalc()});
+ $('#iP').addEventListener('input',()=>{$('#iPm').value='own';incCalc()});
+ $('#iA').addEventListener('input',()=>{if(INC.o&&Math.abs((+$('#iA').value||0)-INC.o.totalArea)>.05&&INC.rs==='contract')incSetRs('analog');incCalc()});
+ ['#iLoc','#iPm','#iH','#iV','#iB','#iI','#iT'].forEach(id=>$(id).addEventListener('input',incCalc));
+ incCalc();})();
+/* calculator */
+function calc(){const a=+$('#cA').value||0;const g=$('#cG').value;const rate=g==='all'?S.allmed:analogFor(a);const b=a<30?'<30':a<100?'30–100':a<300?'100–300':'300+';
+ $('#cM').textContent=a?fmt(a*rate,0)+' грн':'—';$('#cY').textContent=a?fmt(a*rate*12,0)+' грн':'—';
+ $('#cN').textContent=a?`Ставка ${fmt(rate,2)} грн/м²/міс без ПДВ — медіана ${g==='all'?'усіх об’єктів':'групи площі '+b+' м²'}.`:'';}
+$('#cA').oninput=calc;$('#cG').onchange=calc;
+
+/* ---------- filters init ---------- */
+[...new Set(OBJ.map(o=>o.district).filter(Boolean))].sort().forEach(d=>$('#fd').add(new Option(d,d)));
+[...new Set(OBJ.map(o=>o.ocid.slice(10,14)))].sort().forEach(y=>$('#fy').add(new Option(y,y)));
+const owc={};OBJ.forEach(o=>owc[o.owner]=(owc[o.owner]||0)+1);Object.entries(owc).sort((a,b)=>b[1]-a[1]).forEach(([k,v])=>$('#fo').add(new Option(`${k.length>45?k.slice(0,43)+'…':k} (${v})`,k)));
+document.querySelectorAll('.filters input,.filters select').forEach(e=>e.addEventListener(e.type==='text'||e.type==='number'?'input':'change',()=>{const l=filtered();drawMap(l);catalog(l)}));
+$('#freset').onclick=()=>{document.querySelectorAll('.filters input[type=text],.filters input[type=number]').forEach(i=>i.value='');document.querySelectorAll('.filters select').forEach(s=>s.value='');['available','check','leased','inactive'].forEach(s=>$('#fs-'+s).checked=true);$('#fflag').checked=false;$('#fextra').checked=false;const l=filtered();drawMap(l);catalog(l)};
+const setHH=()=>document.documentElement.style.setProperty('--hh',document.querySelector('header').offsetHeight+'px');setHH();window.addEventListener('resize',setHH);
+initMap();cfgUI();render();
+})();
+</script>
+</body>
+</html>

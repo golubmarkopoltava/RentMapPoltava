@@ -1,0 +1,306 @@
+/* RentMapPoltava v2 — візуальний стиль «Цифрової Полтави» + типографіка в стилі «Дії» (e-Ukraine, CC BY 4.0)
+   Палітра: бірюзово-сірий градієнт; чорні pill-кнопки як у «Дії»; білі картки з радіусом 20–24px; круглі іконки-бейджі. */
+/*__FONTS__*/
+:root{--blue:#21486B;--blue2:#2F6DB5;--teal:#6ACCC5;--teal2:#4FB3AC;--grey:#C9D3DB;--free:#C77700;--inact:#9B59B6;--danger:#D6473F;--ok:#2E7D4F;
+ --paper:#F4F6F9;--ink:#0B0F14;--ink2:#3D4752;--muted:#66717E;--line:#E2E8EE;--card:#fff;--r:22px;
+ --grad:linear-gradient(120deg,#6ACCC5 0%,#9CCFCB 35%,#C2D2D6 70%,#DCE2E7 100%);
+ --grad-soft:linear-gradient(160deg,#E6F6F4 0%,#EEF2F5 55%,#F4F6F9 100%);
+ --sh:0 2px 10px rgba(16,40,60,.06);--sh-h:0 12px 30px rgba(16,40,60,.14);--ease:cubic-bezier(.2,.7,.2,1)}
+*{box-sizing:border-box}html,body{margin:0;height:100%}html{scroll-behavior:smooth}
+body{font:15px/1.5 "e-Ukraine",Inter,"Segoe UI",system-ui,sans-serif;color:var(--ink);background:var(--grad-soft) fixed;-webkit-font-smoothing:antialiased}
+h1,h2,h3,h4{font-family:"e-Ukraine Head","e-Ukraine",sans-serif;font-weight:700;margin:0;letter-spacing:-.005em}
+a{color:var(--blue2);text-underline-offset:3px}a:hover{color:var(--blue)}
+.mono{font-family:"e-Ukraine",ui-monospace,monospace;font-size:12px;letter-spacing:.02em;color:var(--muted)}
+:focus-visible{outline:3px solid var(--blue2);outline-offset:2px;border-radius:8px}
+/* header */
+header{background:var(--grad);color:var(--ink);padding:12px 26px;position:sticky;top:0;z-index:900;box-shadow:0 1px 0 rgba(0,0,0,.05)}
+.top{display:flex;align-items:center;gap:14px;flex-wrap:wrap}
+.logo{display:flex;align-items:center;gap:12px}
+.logo .gerb{width:44px;height:54px;object-fit:contain;flex:none;filter:drop-shadow(0 3px 6px rgba(0,0,0,.18));transition:transform .3s var(--ease)}
+.logo:hover .gerb{transform:scale(1.06) rotate(-3deg)}
+.logo h1{font-size:21px}.logo small{display:block;color:var(--ink2);font:400 12px "e-Ukraine",sans-serif}
+.spacer{flex:1}
+.upd{font-size:12px;color:var(--ink2);max-width:270px;line-height:1.35}
+.mode{display:flex;background:rgba(255,255,255,.55);border-radius:999px;padding:4px;backdrop-filter:blur(6px)}
+.mode button{border:0;background:transparent;color:var(--ink);padding:7px 14px;border-radius:999px;cursor:pointer;font:500 13px "e-Ukraine",sans-serif;transition:background .2s,color .2s}
+.mode button:hover{background:rgba(255,255,255,.7)}
+.mode button.on{background:#000;color:#fff}
+.cta{border:0;border-radius:999px;padding:11px 20px;background:#000;color:#fff;font:500 14px "e-Ukraine",sans-serif;cursor:pointer;display:inline-flex;align-items:center;gap:8px;box-shadow:0 6px 18px rgba(0,0,0,.18);transition:transform .2s var(--ease),box-shadow .2s,background .2s}
+.cta:hover{transform:translateY(-2px);box-shadow:0 10px 24px rgba(0,0,0,.25);background:#1d2630}
+.cta:active{transform:translateY(0) scale(.98)}
+.cta svg{width:18px;height:18px;flex:none}
+/* layout: ліве вертикальне меню + контент */
+@media print{.shell{display:block}}
+.shell{display:grid;grid-template-columns:236px minmax(0,1fr);gap:20px;max-width:1680px;margin:0 auto;padding:20px 24px 90px;align-items:start}
+main{min-width:0}
+.side{position:sticky;top:calc(var(--hh,70px) + 16px);display:flex;flex-direction:column;gap:10px;max-height:calc(100vh - var(--hh,70px) - 32px);overflow:auto;scrollbar-width:thin}
+.side nav{background:#fff;border-radius:20px;padding:8px;box-shadow:var(--sh);display:flex;flex-direction:column;gap:2px}
+.side .sg{font-size:10.5px;font-weight:500;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);padding:10px 10px 4px}
+.side .sg:first-child{padding-top:4px}
+.side nav button{border:0;background:transparent;color:var(--ink2);height:40px;padding:0 10px 0 6px;font:500 13.5px/1.2 "e-Ukraine",sans-serif;cursor:pointer;border-radius:12px;display:flex;align-items:center;gap:10px;text-align:left;width:100%;position:relative;transition:background .18s,color .18s,transform .18s var(--ease)}
+.side nav button:hover{background:#EEF8F7;color:var(--ink);transform:translateX(2px)}
+.side .si{width:28px;height:28px;border-radius:50%;background:var(--paper);display:grid;place-items:center;flex:none;transition:background .2s,color .2s}
+.side .si svg{width:15px;height:15px}
+.side nav button:hover .si{background:#fff}
+.side nav button.on{background:var(--grad-soft);color:var(--ink);box-shadow:inset 3px 0 0 var(--teal2)}
+.side nav button.on .si{background:#000;color:#fff}
+.side .sl{flex:1;min-width:0}
+.side-card{display:flex;flex-direction:column;gap:1px;background:var(--grad);border-radius:18px;padding:12px 14px;text-decoration:none;color:var(--ink);font-size:12px;box-shadow:var(--sh);transition:transform .2s var(--ease),box-shadow .2s}
+.side-card b{font:700 13px "e-Ukraine Head",sans-serif}.side-card span{color:var(--ink2)}
+.side-card:hover{transform:translateY(-2px);box-shadow:var(--sh-h);color:var(--ink)}
+@media(max-width:1000px){.shell{grid-template-columns:1fr;padding:14px 14px 90px}.side{position:sticky;top:var(--hh,70px);z-index:800;max-height:none;margin:0 -14px;padding:8px 14px;background:var(--paper)}
+ .side nav{flex-direction:row;overflow-x:auto;padding:6px;border-radius:999px}.side .sg,.side-card{display:none}.side nav button{width:auto;white-space:nowrap;flex:none;border-radius:999px;padding-right:14px}}
+/* hero */
+.hero{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px;margin-bottom:16px}
+@media(max-width:900px){.hero{grid-template-columns:1fr}}
+.act{background:#fff;border-radius:var(--r);padding:18px;display:flex;gap:14px;align-items:center;cursor:pointer;border:1px solid transparent;box-shadow:var(--sh);transition:transform .25s var(--ease),box-shadow .25s,border-color .25s;text-align:left;font:inherit;color:inherit}
+.act:hover{transform:translateY(-4px);box-shadow:var(--sh-h);border-color:var(--teal)}
+.act .ic{width:52px;height:52px;border-radius:50%;background:var(--grad);display:grid;place-items:center;flex:none;transition:transform .3s var(--ease)}
+.act:hover .ic{transform:scale(1.08) rotate(-6deg)}
+.act .ic svg{width:24px;height:24px}
+.act b{display:block;font:700 16px "e-Ukraine Head",sans-serif}.act span{color:var(--muted);font-size:13px}
+/* KPI */
+.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px;margin-bottom:16px}
+.kpi{background:var(--card);border-radius:var(--r);padding:16px 18px;box-shadow:var(--sh);transition:transform .25s var(--ease),box-shadow .25s}
+.kpi:hover{transform:translateY(-3px);box-shadow:var(--sh-h)}
+.kpi .v{font:700 28px "e-Ukraine Head",sans-serif;color:var(--ink)}
+.kpi .l{color:var(--ink2);font-size:13px}.kpi .s{color:var(--muted);font-size:12px;margin-top:4px}
+.tab{display:none;animation:fade .35s var(--ease)}.tab.on{display:block}
+@keyframes fade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+.card{background:var(--card);border-radius:var(--r);padding:18px;margin-bottom:14px;box-shadow:var(--sh);transition:box-shadow .25s}
+.card:hover{box-shadow:0 6px 22px rgba(16,40,60,.09)}
+.card h3{font-size:17px;margin-bottom:10px}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:14px}.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+@media(max-width:900px){.grid2,.grid3{grid-template-columns:1fr}}
+.mapwrap{display:grid;grid-template-columns:310px 1fr;gap:14px}
+@media(max-width:900px){.mapwrap{grid-template-columns:1fr}}
+/* окремий контекст накладання: кнопки +/− та шари Leaflet (z-index 1000) не вилазять поверх закріпленої шапки */
+#map{height:600px;border-radius:var(--r);box-shadow:var(--sh);overflow:hidden;position:relative;z-index:0;isolation:isolate}
+.leaflet-bar{border:0!important;border-radius:14px!important;box-shadow:var(--sh-h)!important;overflow:hidden}
+.leaflet-bar a{width:36px!important;height:36px!important;line-height:36px!important;font:500 20px "e-Ukraine",sans-serif!important;color:var(--ink)!important;transition:background .15s}
+.leaflet-bar a:hover{background:#EEF8F7!important}
+.leaflet-control-layers{border:0!important;border-radius:14px!important;box-shadow:var(--sh-h)!important}
+.leaflet-control-layers-toggle{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M12 4 3 9l9 5 9-5-9-5z' fill='none' stroke='%230B0F14' stroke-width='1.8' stroke-linejoin='round'/%3E%3Cpath d='m3 13.5 9 5 9-5' fill='none' stroke='%230B0F14' stroke-width='1.8' stroke-linejoin='round'/%3E%3C/svg%3E")!important;background-size:22px 22px!important;width:40px!important;height:40px!important}
+.leaflet-control-layers-expanded{padding:10px 14px!important;font-size:13px}
+.filters label{display:block;font-size:12px;color:var(--ink2);margin:12px 0 5px;font-weight:500}
+.filters input[type=text],.filters input[type=number],.filters select,.field{width:100%;padding:10px 14px;border:1.5px solid var(--line);border-radius:14px;font:inherit;background:#fff;transition:border-color .2s,box-shadow .2s}
+.filters input:hover,.filters select:hover,.field:hover{border-color:#b9c6d1}
+.filters input:focus,.filters select:focus,.field:focus{border-color:var(--teal2);box-shadow:0 0 0 4px rgba(106,204,197,.25);outline:none}
+.filters details{margin-top:10px}.filters summary{cursor:pointer;color:var(--blue2);font-size:13px;font-weight:500;list-style:none}.filters summary::before{content:"＋ "}.filters details[open] summary::before{content:"－ "}
+.row{display:flex;gap:8px;align-items:center}
+.chk{display:flex;align-items:center;gap:10px;margin:6px 0;font-size:13px;cursor:pointer;padding:6px 8px;border-radius:12px;transition:background .15s}
+.chk:hover{background:var(--paper)}
+.chk input{width:18px;height:18px;accent-color:#000;flex:none;margin:0}
+.dot{width:12px;height:12px;border-radius:50%;display:inline-block;border:2px solid #fff;box-shadow:0 0 0 1px rgba(0,0,0,.15);flex:none}
+.btn{border:0;border-radius:999px;padding:9px 16px;background:#000;color:#fff;font:500 13px "e-Ukraine",sans-serif;cursor:pointer;transition:transform .2s var(--ease),box-shadow .2s,background .2s}
+.btn:hover{transform:translateY(-1px);box-shadow:0 6px 16px rgba(0,0,0,.18);background:#1d2630}
+.btn:active{transform:scale(.97)}
+.btn.ghost{background:#fff;color:var(--ink);border:1.5px solid var(--ink)}
+.btn.ghost:hover{background:var(--ink);color:#fff}
+.btn.sm{padding:6px 12px;font-size:12px}
+.pill{display:inline-flex;align-items:center;gap:6px;padding:3px 11px;border-radius:999px;font-size:12px;background:var(--paper);color:var(--ink2);white-space:nowrap}
+.pill.sold,.pill.leased{background:#E3ECF8;color:#1F4E87}.pill.approved,.pill.available{background:#FBEEDB;color:#8A5300}.pill.check,.pill.conflict{background:#F1E6F6;color:#6E3A86}.pill.inactive{background:#ECEEF1;color:#4A5566}
+.pill.flag{background:#FBE6E4;color:#9E2A22}.pill.ok{background:#E2F3E9;color:#1E5E3A}
+table{width:100%;border-collapse:separate;border-spacing:0;font-size:13px}
+th{text-align:left;color:var(--muted);font-weight:500;font-size:12px;border-bottom:1px solid var(--line);padding:9px 8px;position:sticky;top:0;background:#fff;cursor:pointer;user-select:none;transition:color .15s}
+th:hover{color:var(--ink)}
+td{border-bottom:1px solid var(--line);padding:9px 8px;vertical-align:top;transition:background .15s}
+tr.click{cursor:pointer}tr.click:hover td{background:#EEF8F7}
+tr.click:hover td:first-child{box-shadow:inset 3px 0 0 var(--teal2)}
+.tbl{max-height:540px;overflow:auto;border-radius:14px}
+.num{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
+.note{background:#FFF8E6;border-radius:14px;padding:11px 14px;font-size:13px;color:#5C4400}
+.ethic{background:#E8F6F4;border-radius:14px;padding:11px 14px;font-size:13px;color:#1D4F4B}
+.bars .b{display:grid;grid-template-columns:170px 1fr 70px;gap:8px;align-items:center;margin:6px 0;font-size:13px;padding:2px 4px;border-radius:8px;transition:background .15s}
+.bars .b:hover{background:var(--paper)}
+.bars .track{background:var(--paper);border-radius:6px;height:14px}
+.bars .fill{background:linear-gradient(90deg,var(--teal2),var(--blue2));height:14px;border-radius:0 6px 6px 0;transition:filter .2s}
+.bars .b:hover .fill{filter:brightness(1.1) saturate(1.1)}
+.legend{display:flex;gap:14px;flex-wrap:wrap;font-size:12px;color:var(--ink2);margin:10px 4px}
+.funnel{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:10px}
+.src{border-radius:18px;padding:14px;background:var(--grad-soft);transition:transform .25s var(--ease),box-shadow .25s}
+.src:hover{transform:translateY(-3px);box-shadow:var(--sh-h)}
+.src .n{font:700 26px "e-Ukraine Head",sans-serif}.src .t{font-size:13px;color:var(--ink2)}.src .d{font-size:11px;color:var(--muted);margin-top:4px}
+.match{display:grid;grid-template-columns:1fr auto;gap:6px 10px;font-size:13px}
+dialog{border:0;border-radius:26px;padding:0;max-width:980px;width:95vw;box-shadow:0 30px 80px rgba(0,0,0,.28)}
+dialog[open]{animation:pop .3s var(--ease)}
+@keyframes pop{from{opacity:0;transform:translateY(14px) scale(.98)}to{opacity:1;transform:none}}
+dialog::backdrop{background:rgba(20,30,45,.4);backdrop-filter:blur(3px)}
+.dlg-h{background:var(--grad);color:var(--ink);padding:18px 22px;display:flex;gap:10px;align-items:flex-start}
+.dlg-h a{color:var(--ink)!important}
+.dlg-b{padding:18px 22px;max-height:75vh;overflow:auto}
+.kv{display:grid;grid-template-columns:210px 1fr;gap:8px 14px;font-size:13px}.kv>div:nth-child(odd){color:var(--muted)}
+.rule{border-radius:18px;padding:14px;background:#fff;box-shadow:var(--sh);transition:transform .25s var(--ease),box-shadow .25s}
+.rule:hover{transform:translateY(-3px);box-shadow:var(--sh-h)}
+.rule h4{margin:0 0 6px;font-size:14px}
+.rule .c{font:700 24px "e-Ukraine Head",sans-serif;color:var(--danger)}
+.rule small{display:block;color:var(--ink2);margin-top:4px}
+body.public .internal-only{display:none!important}
+.hint{color:var(--muted);font-size:12px}
+.chip{border:1.5px solid var(--line);background:#fff;border-radius:999px;padding:6px 13px;font:13px "e-Ukraine",sans-serif;cursor:pointer;color:var(--ink2);transition:all .2s var(--ease)}
+.chip:hover{border-color:var(--teal2);color:var(--ink);background:#EEF8F7;transform:translateY(-1px)}
+#cmpBar{position:fixed;left:50%;bottom:20px;transform:translateX(-50%);background:#000;color:#fff;border-radius:999px;padding:8px 10px 8px 20px;display:none;gap:10px;align-items:center;box-shadow:0 10px 30px rgba(0,0,0,.3);z-index:1000}
+#cmpBar.on{display:flex;animation:pop .3s var(--ease)}
+#cmpBar .btn.ghost{border-color:#fff;color:#000}
+.seg{display:inline-flex;background:var(--paper);border-radius:999px;padding:3px}.seg button{border:0;background:transparent;padding:6px 13px;font:13px "e-Ukraine",sans-serif;cursor:pointer;color:var(--ink2);border-radius:999px;transition:background .2s}.seg button:hover{background:#fff}.seg button.on{background:#000;color:#fff}
+.src-tag{font-size:11px;color:var(--muted);margin-left:6px}
+.star{background:rgba(255,255,255,.6);border:0;font-size:20px;cursor:pointer;color:#000;line-height:1;width:40px;height:40px;border-radius:50%;transition:transform .2s var(--ease),background .2s}
+.star:hover{transform:scale(1.12);background:#fff}
+.calc{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:12px;align-items:end}
+.calc input,.calc select,.rep select,.rep textarea,.app input,.app select,.app textarea{width:100%;padding:10px 14px;border:1.5px solid var(--line);border-radius:14px;font:inherit;background:#fff;transition:border-color .2s,box-shadow .2s}
+.calc input:focus,.calc select:focus,.rep select:focus,.rep textarea:focus,.app input:focus,.app select:focus,.app textarea:focus{border-color:var(--teal2);box-shadow:0 0 0 4px rgba(106,204,197,.25);outline:none}
+.big{font:700 26px "e-Ukraine Head",sans-serif}
+.leaflet-container{font-family:"e-Ukraine",sans-serif}
+/* маркери-«шпильки» (концепція POLTAVA PROPERTY) */
+.pin{background:none;border:0}
+.pin-in{width:100%;height:100%;transform-origin:50% 100%;transition:transform .22s var(--ease),filter .22s;filter:drop-shadow(0 1.5px 1.5px rgba(0,0,0,.28)) drop-shadow(0 4px 5px rgba(16,40,60,.12))}
+.pin-in svg{width:100%;height:100%;display:block;overflow:visible}
+.pin:hover .pin-in,.pin:focus-visible .pin-in{transform:scale(1.22) translateY(-2px);filter:drop-shadow(0 0 7px color-mix(in srgb,var(--pc) 70%,transparent)) drop-shadow(0 6px 8px rgba(0,0,0,.3))}
+.pin.on .pin-in{transform:scale(1.45) translateY(-3px);filter:drop-shadow(0 0 10px color-mix(in srgb,var(--pc) 85%,transparent)) drop-shadow(0 0 22px color-mix(in srgb,var(--pc) 55%,transparent)) drop-shadow(0 8px 10px rgba(0,0,0,.3))}
+.pin.on::after{content:"";position:absolute;left:50%;bottom:-5px;width:26px;height:9px;margin-left:-13px;border-radius:50%;background:radial-gradient(closest-side,color-mix(in srgb,var(--pc,#000) 50%,transparent),transparent);animation:pulse 1.6s var(--ease) infinite;pointer-events:none}
+@keyframes pulse{0%{transform:scale(.6);opacity:1}100%{transform:scale(1.8);opacity:0}}
+.pin:focus{outline:none}
+.mpin{display:inline-block;width:18px;height:23px;flex:none;vertical-align:-5px;filter:drop-shadow(0 1px 1px rgba(0,0,0,.25))}
+.mpin svg{width:100%;height:100%;display:block;overflow:visible}
+.leaflet-tooltip{border-radius:12px;border:0;box-shadow:var(--sh-h);font-size:13px;padding:8px 12px}
+/* application form */
+.combo{position:relative;margin-top:5px}
+.combo input[type=text]{padding-left:42px!important;padding-right:40px!important;height:46px;font-size:15px}
+.combo-ic{position:absolute;left:14px;top:14px;color:var(--muted);pointer-events:none}
+.combo-x{position:absolute;right:8px;top:8px;width:30px;height:30px;border:0;border-radius:50%;background:var(--paper);cursor:pointer;color:var(--ink2);transition:background .15s}
+.combo-x:hover{background:#E3F4F2}
+.combo-list{position:absolute;left:0;right:0;top:calc(100% + 6px);background:#fff;border-radius:16px;box-shadow:0 18px 44px rgba(16,40,60,.22);max-height:320px;overflow:auto;z-index:20;padding:6px;animation:fade .18s var(--ease)}
+.combo-g{font-size:11px;font-weight:500;color:var(--muted);text-transform:uppercase;letter-spacing:.04em;padding:10px 10px 4px;position:sticky;top:-6px;background:#fff}
+.combo-o{display:flex;align-items:center;gap:10px;padding:8px 10px;border-radius:12px;cursor:pointer;font-size:14px;transition:background .12s}
+.combo-o.on{background:#EEF8F7;box-shadow:inset 3px 0 0 var(--teal2)}
+.combo-o .t{flex:1;min-width:0}.combo-o .a{color:var(--muted);font-size:12.5px;white-space:nowrap;font-variant-numeric:tabular-nums}
+.combo-o mark{background:#CDEFEB;color:inherit;border-radius:4px;padding:0 1px}
+.combo-empty{padding:12px;color:var(--muted);font-size:13px}
+.consents{margin-top:14px;background:var(--grad-soft);border-radius:16px;padding:6px 8px}
+.consents .chk{align-items:flex-start;font-size:13px;line-height:1.45;margin:2px 0}
+.consents .chk input{margin-top:1px}
+.btn:disabled{background:#AEB7C0;cursor:not-allowed;transform:none;box-shadow:none}
+.app{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.app label{font-size:12px;color:var(--ink2);font-weight:500;display:block}
+.app .full{grid-column:1/-1}
+.steps{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin:4px 0 14px}
+.step{background:var(--grad-soft);border-radius:16px;padding:12px;font-size:12.5px;color:var(--ink2)}
+.step b{display:grid;place-items:center;width:28px;height:28px;border-radius:50%;background:#000;color:#fff;margin-bottom:6px;font-size:13px}
+@media(max-width:700px){.app,.steps{grid-template-columns:1fr}}
+/* chatbot */
+#botFab{position:fixed;right:24px;bottom:24px;width:64px;height:64px;border-radius:50%;border:0;background:var(--grad);box-shadow:0 10px 28px rgba(16,40,60,.28);cursor:pointer;z-index:1100;display:grid;place-items:center;transition:transform .25s var(--ease),box-shadow .25s}
+#botFab:hover{transform:translateY(-3px) scale(1.06);box-shadow:0 14px 34px rgba(16,40,60,.34)}
+#botFab svg{width:28px;height:28px}
+#botFab .badge{position:absolute;top:-4px;right:-4px;background:#000;color:#fff;font-size:11px;border-radius:999px;padding:2px 7px}
+#bot{position:fixed;right:24px;bottom:100px;width:400px;max-width:calc(100vw - 32px);height:560px;max-height:calc(100vh - 140px);background:#fff;border-radius:26px;box-shadow:0 24px 70px rgba(16,40,60,.3);z-index:1100;display:none;flex-direction:column;overflow:hidden}
+#bot.on{display:flex;animation:pop .3s var(--ease)}
+#bot .bh{background:var(--grad);padding:14px 16px;display:flex;align-items:center;gap:10px}
+#bot .bh .av{width:38px;height:38px;border-radius:50%;background:#000;color:#fff;display:grid;place-items:center;font:700 13px "e-Ukraine Head",sans-serif}
+#bot .bh b{display:block;font:700 15px "e-Ukraine Head",sans-serif}#bot .bh span{font-size:11px;color:var(--ink2)}
+#bot .bm{flex:1;overflow:auto;padding:14px;background:var(--paper);display:flex;flex-direction:column;gap:10px}
+.msg{max-width:88%;padding:10px 13px;border-radius:18px;font-size:13.5px;line-height:1.45;animation:fade .25s var(--ease)}
+.msg.b{background:#fff;border-bottom-left-radius:6px;box-shadow:var(--sh)}
+.msg.u{background:#000;color:#fff;align-self:flex-end;border-bottom-right-radius:6px}
+.msg .res{margin-top:8px;display:flex;flex-direction:column;gap:4px}
+.msg .res button{text-align:left;border:0;background:var(--paper);border-radius:10px;padding:7px 10px;font:12.5px "e-Ukraine",sans-serif;cursor:pointer;transition:background .15s}
+.msg .res button:hover{background:#E3F4F2}
+.qr{display:flex;flex-wrap:nowrap;gap:6px;padding:8px 12px;border-top:1px solid var(--line);overflow-x:auto;scrollbar-width:thin}
+.qr .chip{flex:none;white-space:nowrap}
+#bot form{display:flex;gap:8px;padding:10px 12px;border-top:1px solid var(--line)}
+#bot form input{flex:1;padding:10px 14px;border:1.5px solid var(--line);border-radius:999px;font:inherit}
+#bot form input:focus{border-color:var(--teal2);outline:none;box-shadow:0 0 0 4px rgba(106,204,197,.25)}
+/* інформаційні розділи */
+.pg-h{background:var(--grad);border-radius:var(--r);padding:20px 22px;margin-bottom:14px;box-shadow:var(--sh)}
+.pg-h h2{font-size:24px;margin:2px 0 6px}.pg-h p{margin:0;color:var(--ink2);font-size:14px;max-width:880px}
+.eyebrow{font-size:12px;color:var(--ink2);font-weight:500}
+.tag-rm{display:inline-flex;align-items:center;border:0;background:#000;color:#fff;border-radius:999px;padding:1px 9px;font:500 11px "e-Ukraine",sans-serif;cursor:pointer;vertical-align:1px;white-space:nowrap;transition:background .2s,transform .2s var(--ease)}
+button.tag-rm:hover{background:var(--teal2);color:#000;transform:translateY(-1px)}
+.fgrid{columns:3 320px;column-gap:14px}
+.fgrid .fcard{break-inside:avoid;margin-bottom:14px;display:block}
+.fcard{background:#fff;border-radius:var(--r);padding:16px 18px;box-shadow:var(--sh);transition:transform .25s var(--ease),box-shadow .25s}
+.fcard:hover{transform:translateY(-3px);box-shadow:var(--sh-h)}
+.fh{display:flex;gap:12px;align-items:center;margin-bottom:8px}
+.fi{width:40px;height:40px;border-radius:50%;background:var(--grad);display:grid;place-items:center;flex:none}
+.fi svg,.ci svg{width:18px;height:18px}
+.fh b{display:block;font:700 15px "e-Ukraine Head",sans-serif}.fh span{font-size:12px;color:var(--muted)}
+.fcard ul,.ind{list-style:none;margin:0;padding:0}
+.fcard li,.ind li{display:flex;gap:10px;padding:7px 0;border-top:1px solid var(--line);font-size:13px;line-height:1.45}
+.fcard li:first-child{border-top:0}
+.pn{flex:none;min-width:38px;font-size:11.5px;font-weight:500;color:var(--teal2);padding-top:1px}
+.plain{margin:0;padding-left:18px;font-size:13.5px}.plain li{margin:6px 0}
+.facts{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:10px;margin-bottom:14px}
+.facts div{background:#fff;border-radius:18px;padding:12px 14px;box-shadow:var(--sh)}
+.facts span{display:block;font-size:11.5px;color:var(--muted)}.facts b{font-size:13.5px;font-weight:500}
+.acc details{background:#fff;border-radius:18px;margin-bottom:8px;box-shadow:var(--sh);overflow:hidden}
+.acc summary{list-style:none;cursor:pointer;padding:13px 16px;display:flex;align-items:center;gap:12px;font:500 15px "e-Ukraine Head",sans-serif;transition:background .15s}
+.acc summary::-webkit-details-marker{display:none}
+.acc summary:hover{background:#F3FAF9}
+.acc summary b{width:28px;height:28px;border-radius:50%;background:var(--paper);display:grid;place-items:center;font-size:13px;flex:none;transition:background .2s,color .2s}
+.acc details[open] summary b{background:#000;color:#fff}
+.acc summary::after{content:"";margin-left:auto;width:9px;height:9px;border-right:2px solid var(--ink2);border-bottom:2px solid var(--ink2);transform:rotate(45deg);transition:transform .2s}
+.acc details[open] summary::after{transform:rotate(-135deg)}
+.acc details>*:not(summary){margin:0 16px 14px 56px;font-size:13.5px}
+.org{display:flex;flex-direction:column;align-items:center;gap:10px;padding:6px 0}
+.org div,.org span{background:var(--grad-soft);border-radius:14px;padding:8px 12px;font-size:12.5px;text-align:center}
+.o-top{background:#000!important;color:#fff;font-weight:500}
+.o-mid{display:flex;gap:10px;align-items:center;background:none!important;padding:0!important}
+.o-mid .o-dep{background:var(--grad)!important;font-weight:500}
+.o-mid span{color:var(--muted)}
+.o-row{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;background:none!important;padding:0!important;width:100%}
+.o-row div{border:1.5px solid var(--line);background:#fff!important}
+@media(max-width:800px){.o-row{grid-template-columns:1fr 1fr}}
+.cgrid{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,1fr);gap:14px}
+@media(max-width:1000px){.cgrid{grid-template-columns:1fr}}
+.person{display:flex;gap:12px;align-items:center;margin-bottom:12px}
+.ava{width:52px;height:52px;border-radius:50%;background:var(--grad);display:grid;place-items:center;flex:none}
+.person b{display:block;font:700 16px "e-Ukraine Head",sans-serif}.person span{font-size:13px;color:var(--muted)}
+.clist{display:flex;flex-direction:column;gap:6px}
+.clist.row3{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr))}
+.crow{display:flex;gap:12px;align-items:center;padding:9px 12px;border-radius:14px;background:var(--paper);color:var(--ink);text-decoration:none;font-size:14px;transition:background .15s,transform .2s var(--ease)}
+a.crow:hover{background:#E3F4F2;transform:translateX(2px);color:var(--ink)}
+.crow small{display:block;font-size:11px;color:var(--muted)}
+.ci{width:32px;height:32px;border-radius:50%;background:#fff;display:grid;place-items:center;flex:none;box-shadow:var(--sh)}
+.ci svg{width:16px;height:16px}
+.howto{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.howto button{border:1.5px solid var(--line);background:#fff;border-radius:16px;padding:11px 12px;text-align:left;cursor:pointer;font:inherit;transition:border-color .2s,transform .2s var(--ease),box-shadow .2s}
+.howto button:hover{border-color:var(--teal2);transform:translateY(-2px);box-shadow:var(--sh-h)}
+.howto b{display:block;font:500 14px "e-Ukraine Head",sans-serif;margin-bottom:2px}.howto span{font-size:12px;color:var(--muted)}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+@media print{header,.side,.mode,.btn,#botFab,#bot,.cta{display:none!important}dialog{position:static;box-shadow:none}}
+
+/* калькулятор доходу громади */
+#incCard{margin-top:14px}
+.inc-top{display:grid;grid-template-columns:minmax(0,2fr) 120px 210px minmax(170px,1fr);gap:12px;align-items:start;margin:12px 0 14px}
+.inc-obj{display:flex;flex-direction:column;gap:5px}
+.inc-top label{display:flex;flex-direction:column;gap:5px}
+.inc-top input[type=range]{accent-color:#1D8C84;height:42px;width:100%;margin:0}
+.inc-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.inc-col{background:var(--paper);border-radius:20px;padding:14px 16px;transition:box-shadow .25s,transform .25s var(--ease)}
+.inc-col:hover{box-shadow:var(--sh);transform:translateY(-2px)}
+.inc-h{display:flex;gap:10px;align-items:center;margin-bottom:10px}
+.inc-h b{display:block;font:700 15px "e-Ukraine Head",sans-serif}.inc-h span{font-size:12px;color:var(--muted)}
+.ib{width:38px;height:38px;border-radius:50%;display:grid;place-items:center;flex:none;background:#fff;box-shadow:var(--sh)}
+.ib.rent{color:#14706A}.ib.priv{color:var(--ink)}
+.inc-f{display:grid;grid-template-columns:1fr 1fr;gap:8px 10px}
+.inc-f label{display:flex;flex-direction:column;gap:4px}.inc-f .w{grid-column:1/-1}
+.inc-f input,.inc-f select,.inc-top input[type=number],.inc-top select,#iQ{width:100%;padding:9px 13px;border:1.5px solid var(--line);border-radius:14px;font:inherit;font-size:14px;color:var(--ink);background:#fff;transition:border-color .2s,box-shadow .2s;box-sizing:border-box}
+.inc-f input:focus,.inc-f select:focus,.inc-top input:focus,.inc-top select:focus{border-color:var(--teal2);box-shadow:0 0 0 4px rgba(106,204,197,.25);outline:none}
+#incCard .combo{margin-top:0}#incCard .combo input[type=text]{height:42px}
+.inc-top .hz{display:flex;flex-direction:column;gap:5px}.inc-top .hz b{color:var(--ink)}
+.seg.sm button{padding:5px 11px;font-size:12px}.seg button:disabled{opacity:.4;cursor:not-allowed}
+.inc-out{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:12px}
+.inc-out>div{background:#fff;border-radius:14px;padding:9px 12px}
+.inc-out>div.w{grid-column:1/-1}
+.inc-out span{display:block;font-size:11.5px;color:var(--muted)}.inc-out i{font-style:normal}
+.inc-out b{font:700 17px "e-Ukraine Head",sans-serif;font-variant-numeric:tabular-nums}
+.inc-out .hl{background:var(--grad)}.inc-out .hl b{font-size:20px}
+.inc-cmp{margin-top:14px;border-top:1px solid var(--line);padding-top:12px}
+.inc-v .v-main{font:500 16px "e-Ukraine Head",sans-serif;margin-bottom:4px}.inc-v .v-sub{font-size:13px;color:var(--ink2);max-width:980px}
+.inc-chart svg{width:100%;height:auto;max-height:260px;display:block;margin-top:8px}
+.inc-chart .ct{font:11px "e-Ukraine",sans-serif;fill:var(--muted)}.inc-chart .cl{font:500 12px "e-Ukraine",sans-serif;fill:var(--ink)}
+.inc-an{margin-top:10px}.inc-an summary{cursor:pointer;font-weight:500;font-size:13.5px;padding:6px 0}
+.inc-an summary:hover{color:#14706A}
+#iAn tr.near td{background:#EEF8F7}
+#iAn td.n,#iAn th.n{text-align:right;font-variant-numeric:tabular-nums}
+.linkbtn{border:0;background:none;padding:0;color:#14706A;text-decoration:underline;cursor:pointer;font:inherit}
+@media(max-width:1100px){.inc-top{grid-template-columns:1fr 1fr}.inc-grid{grid-template-columns:1fr}}
